@@ -301,7 +301,7 @@ db_write_status_label.pack(anchor='e')
 
 # Link to Grafana
 grafana_button = ttk.Button(master=root, text='Open Link to Grafana', command=open_grafana)
-grafana_button.pack(pady=100)
+grafana_button.pack(pady=30)
 
 # Run
 root.after(0, main)
