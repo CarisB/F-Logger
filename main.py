@@ -1,17 +1,25 @@
+"""
+- GUI Logging tool built for the F- Detector experiment in Building 904 @ CERN
+- Developer: Christopher Baek
+- Required modules: InfluxDB, Yoctopuce
+"""
+
+
 from config_db import *
 from config_data import *
 from config_gui import *
 
+from ISELogger import ISELogger
+from METEOLogger import METEOLogger
+from HVLogger import HVLogger
+
 from influxdb import InfluxDBClient
 from yoctopuce.yocto_genericsensor import *
-from yoctopuce.yocto_humidity import *
-from yoctopuce.yocto_pressure import *
-from yoctopuce.yocto_temperature import *
+from yoctopuce.yocto_humidity import YHumidity
+from yoctopuce.yocto_temperature import YTemperature
+from yoctopuce.yocto_pressure import YPressure
 
-import os
 from pathlib import Path
-import re
-from datetime import datetime
 import webbrowser
 
 import tkinter as tk
@@ -21,11 +29,6 @@ from tkinter import PhotoImage
 import warnings
 from urllib3.exceptions import InsecureRequestWarning
 warnings.filterwarnings("ignore", category=InsecureRequestWarning)
-
-# Logger toggles
-logging_ise = True
-logging_meteo = True
-logging_hv = True
 
 # Setup USB interface
 errmsg = YRefParam()
@@ -42,14 +45,23 @@ humidity_sensor = YHumidity.FirstHumidity()
 temperature_sensor = YTemperature.FirstTemperature()
 pressure_sensor = YPressure.FirstPressure()
 
+# Instantiate Logger objects
+ise_logger = ISELogger(mv_sensor)
+meteo_logger = METEOLogger(humidity_sensor, temperature_sensor, pressure_sensor)
+hv_logger = HVLogger()
+
 
 def main():
     data_points = []
-    last_line = get_last_line(HV_LOG_FILE)
+    hv_logger.line = HVLogger.get_last_line(HV_LOG_FILE)
 
-    add_ise_data(data_points)
-    add_meteo_data(data_points)
-    add_hv_data(data_points, last_line)
+    # Add data points and set status text accordingly
+    ise_status_text.set(
+        ise_logger.add_ise_data(data_points))
+    meteo_status_text.set(
+        meteo_logger.add_meteo_data(data_points))
+    hv_status_text.set(
+        hv_logger.add_hv_data(data_points))
 
     if data_points and client.write_points(data_points):  # Successful write
         db_write_status_text.set(WRITE_SUCCESS_TEXT)
@@ -62,172 +74,31 @@ def main():
     root.after(POLLING_MS, main)
 
 
-def add_ise_data(data_points: list):
-    if not mv_sensor.isOnline():
-        ise_toggle_label['fg'] = SENSOR_OFFLINE_COLOR
-        ise_status_text.set("Sensor is offline.")
-        return
-
-    if logging_ise:
-        mv_value = mv_sensor.get_currentRawValue()
-
-        # Add data to data_points to be written
-        data_points.append(
-            {
-                "measurement": MEASUREMENT_LABEL,
-                "tags": {
-                    "device": DEVICE_ID,
-                    "place": TAG_PLACE,
-                    "setup": TAG_SETUP
-                },
-                "fields": {
-                    "voltage": mv_value
-                }
-            })
-
-        # Display ISE info
-        ise_status_text.set(f"Voltage: {mv_value} mV")
-
-    else:
-        ise_status_text.set("ISE logger is off.")
-
-
-def add_meteo_data(data_points: list):
-    if (humidity_sensor is None
-            or temperature_sensor is None
-            or pressure_sensor is None):
-        meteo_toggle_label['fg'] = SENSOR_OFFLINE_COLOR
-        meteo_status_text.set("Sensor is offline.")
-        return
-
-    if logging_meteo:
-        humidity_value = humidity_sensor.get_currentRawValue()
-        temperature_value = temperature_sensor.get_currentRawValue()
-        pressure_value = pressure_sensor.get_currentRawValue()
-
-        # Add data to data_points to be written
-        data_points.append(
-            {
-                "measurement": MEASUREMENT_LABEL,
-                "tags": {
-                    "device": DEVICE_ID,
-                    "place": TAG_PLACE,
-                    "setup": TAG_SETUP
-                },
-                "fields": {
-                    "humidity": humidity_value,
-                    "temperature": temperature_value,
-                    "pressure": pressure_value
-                }
-            })
-
-        # Display METEO info
-        meteo_status_text.set(
-            f"Temperature: {temperature_value} / Humidity: {humidity_value} / Pressure: {pressure_value}")
-
-    else:
-        meteo_status_text.set("METEO logger is off.")
-
-
-def add_hv_data(data_points: list, last_line: str):
-    if not last_line:
-        hv_toggle_label['fg'] = SENSOR_OFFLINE_COLOR
-        hv_status_text.set(f"Couldn't read {HV_LOG_FILE}.")
-        return
-
-    if logging_hv:
-        # Get values from last line of HV log file
-        hv_data = parse_hv_data(last_line)
-
-        # Add data to data_points to be written
-        data_points.append(
-            {
-                "measurement": "hv",
-                "tags": {
-                    "place": TAG_PLACE,
-                    "module": TAG_MODULE,
-                    "board": str(hv_data['board']),
-                    "channel": str(hv_data['channel']),
-                    "par": str(hv_data['parameter'])
-                },
-                "fields": {
-                    "value": float(hv_data['value'])
-                }
-            }
-        )
-
-        # Display HV info
-        hv_status_text.set(f"Current: {hv_data['value']} μA")
-
-    else:
-        hv_status_text.set("HV logger is off.")
-
-
-def get_last_line(file):
-    try:
-        with open(file, 'rb') as f:
-            try:  # catch OSError in case of a one line file
-                f.seek(-2, os.SEEK_END)
-                while f.read(1) != b'\n':
-                    f.seek(-2, os.SEEK_CUR)
-            except OSError:
-                f.seek(0)
-
-            return f.readline().decode()
-    except FileNotFoundError:
-        return None
-
-
-def parse_hv_data(line: str):
-    match = re.match(r'\[(.*?)\]: \[HV\] bd \[(\d+)\] ch \[(\d+)\] par \[(.*?)\] val \[(.*?)\];', line)
-
-    if match:
-        timestamp_str, board, channel, parameter, value = match.groups()
-        timestamp = datetime.strptime(timestamp_str, "%Y-%m-%dT%H:%M:%S")
-
-        return {
-            'timestamp': timestamp,
-            'board': board,
-            'channel': channel,
-            'parameter': parameter,
-            'value': value
-        }
-
-    # No regex match was found
-    return None
-
-
-def toggle_ise():
-    global logging_ise
-
-    if logging_ise:
+def toggle_ise_logger():
+    if ise_logger.logging:
         ise_toggle_button['image'] = off_img
-        logging_ise = False
+        ise_logger.logging = False
     else:
         ise_toggle_button['image'] = on_img
-        logging_ise = True
+        ise_logger.logging = True
 
 
-def toggle_meteo():
-    global logging_meteo
-
-    if logging_meteo:
+def toggle_meteo_logger():
+    if meteo_logger.logging:
         meteo_toggle_button['image'] = off_img
-        logging_meteo = False
+        meteo_logger.logging = False
     else:
         meteo_toggle_button['image'] = on_img
-        logging_meteo = True
+        meteo_logger.logging = True
 
 
-def toggle_hv():
-    global logging_hv
-
-    if logging_hv:
+def toggle_hv_logger():
+    if hv_logger.logging:
         hv_toggle_button['image'] = off_img
-        logging_hv = False
+        hv_logger.logging = False
     else:
         hv_toggle_button['image'] = on_img
-        logging_hv = True
+        hv_logger.logging = True
 
 
 def open_grafana():
@@ -265,7 +136,7 @@ ise_toggle_label = tk.Label(master=toggle_frame, text='ISE Logger',
 ise_toggle_label.grid(column=0, row=0,
                       sticky=tk.W, padx=5, pady=5)
 
-ise_toggle_button = ttk.Button(master=toggle_frame, image=on_img, command=toggle_ise)
+ise_toggle_button = ttk.Button(master=toggle_frame, image=off_img, command=toggle_ise_logger)
 ise_toggle_button.grid(column=1, row=0,
                        sticky=tk.W, padx=5, pady=5)
 
@@ -280,7 +151,7 @@ meteo_toggle_label = tk.Label(master=toggle_frame, text='METEO Logger',
 meteo_toggle_label.grid(column=0, row=1,
                         sticky=tk.W, padx=5, pady=5)
 
-meteo_toggle_button = ttk.Button(master=toggle_frame, image=on_img, command=toggle_meteo)
+meteo_toggle_button = ttk.Button(master=toggle_frame, image=off_img, command=toggle_meteo_logger)
 meteo_toggle_button.grid(column=1, row=1,
                          sticky=tk.W, padx=5, pady=5)
 
@@ -295,7 +166,7 @@ hv_toggle_label = tk.Label(master=toggle_frame, text='HV Logger',
 hv_toggle_label.grid(column=0, row=2,
                      sticky=tk.W, padx=5, pady=5)
 
-hv_toggle_button = ttk.Button(master=toggle_frame, image=on_img, command=toggle_hv)
+hv_toggle_button = ttk.Button(master=toggle_frame, image=off_img, command=toggle_hv_logger)
 hv_toggle_button.grid(column=1, row=2,
                       sticky=tk.W, padx=5, pady=5)
 
