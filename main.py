@@ -150,7 +150,7 @@ def add_hv_data(data_points: list, last_line: str):
         )
 
         # Display HV info
-        hv_status_text.set(f"Voltage: {hv_data['value']} mV")
+        hv_status_text.set(f"Current: {hv_data['value']} μA")
 
 
 def get_last_line(file):
