@@ -4,7 +4,6 @@
 - Required modules: InfluxDB, Yoctopuce
 """
 
-
 from config_db import *
 from config_data import *
 from config_gui import *
