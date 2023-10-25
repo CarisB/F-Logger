@@ -87,6 +87,9 @@ def add_ise_data(data_points: list):
         # Display ISE info
         ise_status_text.set(f"Voltage: {mv_value} mV")
 
+    else:
+        ise_status_text.set("ISE logger is off.")
+
 
 def add_meteo_data(data_points: list):
     if (humidity_sensor is None
@@ -121,6 +124,9 @@ def add_meteo_data(data_points: list):
         meteo_status_text.set(
             f"Temperature: {temperature_value} / Humidity: {humidity_value} / Pressure: {pressure_value}")
 
+    else:
+        meteo_status_text.set("METEO logger is off.")
+
 
 def add_hv_data(data_points: list, last_line: str):
     if not last_line:
@@ -151,6 +157,9 @@ def add_hv_data(data_points: list, last_line: str):
 
         # Display HV info
         hv_status_text.set(f"Current: {hv_data['value']} μA")
+
+    else:
+        hv_status_text.set("HV logger is off.")
 
 
 def get_last_line(file):
