@@ -9,6 +9,7 @@ from yoctopuce.yocto_pressure import *
 from yoctopuce.yocto_temperature import *
 
 import os
+from pathlib import Path
 import re
 from datetime import datetime
 import webbrowser
@@ -239,7 +240,7 @@ root.title(WINDOW_TITLE)
 root.geometry(f'{WINDOW_WIDTH}x{WINDOW_HEIGHT}')
 
 # Resources
-current_path = os.path.dirname(os.path.abspath(__file__))
+current_path = Path().absolute().__str__()
 on_img = PhotoImage(file=current_path + '/resources/on.png')
 off_img = PhotoImage(file=current_path + '/resources/off.png')
 
