@@ -230,8 +230,9 @@ root.title(WINDOW_TITLE)
 root.geometry(f'{WINDOW_WIDTH}x{WINDOW_HEIGHT}')
 
 # Resources
-on_img = PhotoImage(file='resources/on.png')
-off_img = PhotoImage(file='resources/off.png')
+current_path = os.path.dirname(os.path.abspath(__file__))
+on_img = PhotoImage(file=current_path + '/resources/on.png')
+off_img = PhotoImage(file=current_path + '/resources/off.png')
 
 # Title
 title_label = ttk.Label(
