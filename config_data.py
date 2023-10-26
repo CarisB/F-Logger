@@ -1,4 +1,4 @@
-HV_LOG_FILE = "C:\\Users\\rpcgif\\cernbox\\Documents\\CAENGECO2020.log"
+HV_LOG_DEFAULT_PATH = "C:\\Users\\rpcgif\\cernbox\\Documents\\CAENGECO2020.log"
 GRAFANA_URL = "https://epdt-rd-monitoring.web.cern.ch/d/i_Rdg6C4z/904?orgId=1"
 
 VOLTAGE_SENSOR_ID = "RXMVOLT2-1CA34F.genericSensor1"

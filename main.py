@@ -24,6 +24,7 @@ import webbrowser
 import tkinter as tk
 from tkinter import ttk
 from tkinter import PhotoImage
+from tkinter import filedialog
 
 import warnings
 from urllib3.exceptions import InsecureRequestWarning
@@ -37,6 +38,8 @@ if YAPI.RegisterHub("usb", errmsg) != YAPI.SUCCESS:
 # Open connection with database
 client = InfluxDBClient(host=DB_HOST, port=DB_PORT, username=DB_USERNAME, password=DB_PASSWORD,
                         database=DB_DATABASE, ssl=True, verify_ssl=False)
+
+hv_log_path = HV_LOG_DEFAULT_PATH  # Set the HV logfile path to the default
 
 # Find sensors
 mv_sensor = YGenericSensor.FindGenericSensor(VOLTAGE_SENSOR_ID)
@@ -52,7 +55,7 @@ hv_logger = HVLogger()
 
 def main():
     data_points = []
-    hv_logger.line = HVLogger.get_last_line(HV_LOG_FILE)
+    hv_logger.line = HVLogger.get_last_line(hv_log_path)
 
     # Add data points and set status text accordingly
     ise_status_text.set(
@@ -98,6 +101,23 @@ def toggle_hv_logger():
     else:
         hv_toggle_button['image'] = on_img
         hv_logger.logging = True
+
+
+def browse_files():
+    global hv_log_path
+
+    filename = filedialog.askopenfilename(
+        initialdir='/',
+        title='Select a File',
+        filetypes=(('.log files', '*.log'), ('All files', '*.*'))
+    )
+    hv_logfile_text.set(filename)
+
+
+def set_hv_log_path():
+    global hv_log_path
+
+    hv_log_path = hv_logfile_text.get()
 
 
 def open_grafana():
@@ -174,14 +194,35 @@ hv_status_label = ttk.Label(master=toggle_frame, textvariable=hv_status_text)
 hv_status_label.grid(column=2, row=2,
                      sticky=tk.W, padx=50, pady=5)
 
+# HV Logfile
+hv_logfile_frame = ttk.Frame(master=root)
+hv_logfile_frame.pack(pady=30)
+
+hv_logfile_label = tk.Label(master=hv_logfile_frame, text='HV GECO Log File',
+                            font='Helvetica 12 italic')
+hv_logfile_label.pack(anchor='w')
+
+hv_logfile_text = tk.StringVar()
+hv_logfile_text.set(hv_log_path)
+hv_logfile_entry = tk.Entry(master=hv_logfile_frame, textvariable=hv_logfile_text,
+                            width=50, fg='#333', bg='#eee')
+hv_logfile_entry.pack(side='left')
+
+hv_logfile_browse_button = tk.Button(master=hv_logfile_frame, text='Browse Files...', command=browse_files)
+hv_logfile_browse_button.pack(side='left')
+
+hv_logfile_select_button = tk.Button(master=hv_logfile_frame, text='Select', command=set_hv_log_path)
+hv_logfile_select_button.pack(side='left')
+
+# DB Write Status
 db_write_status_text = tk.StringVar()
 db_write_status_label = tk.Label(master=root, textvariable=db_write_status_text,
-                                 padx=50, pady=50)
+                                 padx=50, pady=10)
 db_write_status_label.pack(anchor='e')
 
 # Link to Grafana
 grafana_button = ttk.Button(master=root, text='Open Link to Grafana', command=open_grafana)
-grafana_button.pack(pady=30)
+grafana_button.pack(pady=10)
 
 # Run
 root.after(0, main)

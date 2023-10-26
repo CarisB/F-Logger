@@ -13,7 +13,7 @@ class HVLogger:
         """Parses HV logfile data and adds it to data_points. Returns a status message string."""
 
         if not self.line:
-            return f"Couldn't read {HV_LOG_FILE}."
+            return f"Couldn't read HV log file."
 
         if self.logging:
             # Get values from last line of HV log file
