@@ -19,7 +19,7 @@ from METEOLogger import METEOLogger
 from HVLogger import HVLogger
 
 from influxdb import InfluxDBClient
-from pathlib import Path
+import os
 import webbrowser
 
 import tkinter as tk
@@ -109,7 +109,7 @@ root.title(WINDOW_TITLE)
 root.geometry(f'{WINDOW_WIDTH}x{WINDOW_HEIGHT}')
 
 # Resources
-current_path = Path().absolute().__str__()  # The current directory of the script
+current_path = os.path.dirname(os.path.abspath(__file__))  # The current directory of the script
 on_img = PhotoImage(file=current_path + '/resources/on.png')
 off_img = PhotoImage(file=current_path + '/resources/off.png')
 
