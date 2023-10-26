@@ -117,13 +117,15 @@ def open_grafana():
     webbrowser.open_new(GRAFANA_URL)
 
 
+""" TKINTER GUI SECTION """
+
 # Main window
 root = tk.Tk()
 root.title(WINDOW_TITLE)
 root.geometry(f'{WINDOW_WIDTH}x{WINDOW_HEIGHT}')
 
 # Resources
-current_path = Path().absolute().__str__()
+current_path = Path().absolute().__str__()  # The current directory of the script
 on_img = PhotoImage(file=current_path + '/resources/on.png')
 off_img = PhotoImage(file=current_path + '/resources/off.png')
 
