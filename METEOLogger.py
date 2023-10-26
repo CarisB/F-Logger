@@ -1,31 +1,21 @@
 from config_data import *
-from yoctopuce.yocto_humidity import *
-from yoctopuce.yocto_temperature import *
-from yoctopuce.yocto_pressure import *
+from Sensors import Sensors
 
 
 class METEOLogger:
-    def __init__(self,
-                 humidity_sensor: YHumidity,
-                 temperature_sensor: YTemperature,
-                 pressure_sensor: YPressure):
-        self.logging = False
-        self.humidity_sensor = humidity_sensor
-        self.temperature_sensor = temperature_sensor
-        self.pressure_sensor = pressure_sensor
+    logging: bool = False
 
-    def add_meteo_data(self, data_points: list) -> str:
+    @staticmethod
+    def add_meteo_data(data_points: list) -> str:
         """Creates and adds sensor data to data_points. Returns a status message string."""
 
-        if self.logging:
-            if (self.humidity_sensor is None
-                    or self.temperature_sensor is None
-                    or self.pressure_sensor is None):
+        if METEOLogger.logging:
+            if Sensors.humidity is None or Sensors.temperature is None or Sensors.pressure is None:
                 return SENSOR_OFFLINE_MSG
 
-            humidity_value = self.humidity_sensor.get_currentRawValue()
-            temperature_value = self.temperature_sensor.get_currentRawValue()
-            pressure_value = self.pressure_sensor.get_currentRawValue()
+            humidity_value = Sensors.humidity.get_currentRawValue()
+            temperature_value = Sensors.temperature.get_currentRawValue()
+            pressure_value = Sensors.pressure.get_currentRawValue()
 
             # Add data to data_points to be written
             data_points.append(
@@ -46,5 +36,5 @@ class METEOLogger:
             # Return METEO info
             return f"Temperature: {temperature_value} / Humidity: {humidity_value} / Pressure: {pressure_value}"
 
-        else:  # self.logging = False
+        else:  # METEOLogger.logging = False
             return LOGGER_DISABLED_MSG

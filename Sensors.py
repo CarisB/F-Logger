@@ -7,23 +7,30 @@ from yoctopuce.yocto_pressure import YPressure
 
 
 class Sensors:
-    def __init__(self):
+    mv: YGenericSensor
+    humidity: YHumidity
+    temperature: YTemperature
+    pressure: YPressure
+
+    @staticmethod
+    def init():
         # Setup USB interface
         errmsg = YRefParam()
         if YAPI.RegisterHub("usb", errmsg) != YAPI.SUCCESS:
             sys.exit("Init Error: " + errmsg.value)
 
-        self.mv: YGenericSensor = YGenericSensor.FindGenericSensor(VOLTAGE_SENSOR_ID)
-        self.humidity: YHumidity = YHumidity.FirstHumidity()
-        self.temperature: YTemperature = YTemperature.FirstTemperature()
-        self.pressure: YPressure = YPressure.FirstPressure()
+        Sensors.mv = YGenericSensor.FindGenericSensor(VOLTAGE_SENSOR_ID)
+        Sensors.humidity = YHumidity.FirstHumidity()
+        Sensors.temperature = YTemperature.FirstTemperature()
+        Sensors.pressure = YPressure.FirstPressure()
 
-    def check_sensors(self):
-        if not self.mv.isOnline():
-            self.mv = YGenericSensor.FindGenericSensor(VOLTAGE_SENSOR_ID)
-        if not self.humidity.isOnline():
-            self.humidity = YHumidity.FirstHumidity()
-        if not self.temperature.isOnline():
-            self.temperature = YTemperature.FirstTemperature()
-        if not self.pressure.isOnline():
-            self.pressure = YPressure.FirstPressure()
+    @staticmethod
+    def check_sensors():
+        if not Sensors.mv.isOnline():
+            Sensors.mv = YGenericSensor.FindGenericSensor(VOLTAGE_SENSOR_ID)
+        if not Sensors.humidity:
+            Sensors.humidity = YHumidity.FirstHumidity()
+        if not Sensors.temperature:
+            Sensors.temperature = YTemperature.FirstTemperature()
+        if not Sensors.pressure:
+            Sensors.pressure = YPressure.FirstPressure()

@@ -32,30 +32,24 @@ client = InfluxDBClient(host=DB_HOST, port=DB_PORT, username=DB_USERNAME, passwo
 
 hv_log_path = HV_LOG_DEFAULT_PATH  # Set the HV logfile path to the default
 
-# Init sensors
-sensors = Sensors()
-
-# Instantiate Logger objects
-ise_logger = ISELogger(sensors.mv)
-meteo_logger = METEOLogger(sensors.humidity, sensors.temperature, sensors.pressure)
-hv_logger = HVLogger()
+Sensors.init()  # Find and initialize sensors
 
 
 def main():
     data_points = []  # Resets data collection to write to database
-    sensors.check_sensors()  # Check the connection status of sensors
+    Sensors.check_sensors()  # Check the connection status of sensors, try to set if missing
 
     # Gets the last line of the selected HV logfile
-    if hv_logger.logging:
-        hv_logger.line = HVLogger.get_last_line(hv_log_path)
+    if HVLogger.logging:
+        HVLogger.line = HVLogger.get_last_line(hv_log_path)
 
     # Add data points and set status text accordingly
     ise_status_text.set(
-        ise_logger.add_ise_data(data_points))
+        ISELogger.add_ise_data(data_points))
     meteo_status_text.set(
-        meteo_logger.add_meteo_data(data_points))
+        METEOLogger.add_meteo_data(data_points))
     hv_status_text.set(
-        hv_logger.add_hv_data(data_points))
+        HVLogger.add_hv_data(data_points))
 
     if data_points and client.write_points(data_points):  # Successful write
         db_write_status_text.set(WRITE_SUCCESS_TEXT)
@@ -69,30 +63,30 @@ def main():
 
 
 def toggle_ise_logger():
-    if ise_logger.logging:
+    if ISELogger.logging:
         ise_toggle_button['image'] = off_img
-        ise_logger.logging = False
+        ISELogger.logging = False
     else:
         ise_toggle_button['image'] = on_img
-        ise_logger.logging = True
+        ISELogger.logging = True
 
 
 def toggle_meteo_logger():
-    if meteo_logger.logging:
+    if METEOLogger.logging:
         meteo_toggle_button['image'] = off_img
-        meteo_logger.logging = False
+        METEOLogger.logging = False
     else:
         meteo_toggle_button['image'] = on_img
-        meteo_logger.logging = True
+        METEOLogger.logging = True
 
 
 def toggle_hv_logger():
-    if hv_logger.logging:
+    if HVLogger.logging:
         hv_toggle_button['image'] = off_img
-        hv_logger.logging = False
+        HVLogger.logging = False
     else:
         hv_toggle_button['image'] = on_img
-        hv_logger.logging = True
+        HVLogger.logging = True
 
 
 def browse_files():

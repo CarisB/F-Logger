@@ -5,19 +5,19 @@ from datetime import datetime
 
 
 class HVLogger:
-    def __init__(self):
-        self.logging = False
-        self.line = ""
+    logging: bool = False
+    line: str = ""
 
-    def add_hv_data(self, data_points: list) -> str:
+    @staticmethod
+    def add_hv_data(data_points: list) -> str:
         """Parses HV logfile data and adds it to data_points. Returns a status message string."""
 
-        if self.logging:
-            if not self.line:
+        if HVLogger.logging:
+            if not HVLogger.line:
                 return f"Couldn't read HV log file."
 
             # Get values from last line of HV log file
-            hv_data = HVLogger.parse_hv_data(self.line)
+            hv_data = HVLogger.parse_hv_data(HVLogger.line)
 
             # Add data to data_points to be written
             data_points.append(
@@ -56,7 +56,7 @@ class HVLogger:
                     f.seek(0)
 
                 return f.readline().decode()
-        except FileNotFoundError:
+        except FileNotFoundError:  # Couldn't find log
             return None
 
     @staticmethod
