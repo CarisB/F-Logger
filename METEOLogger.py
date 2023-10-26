@@ -17,12 +17,12 @@ class METEOLogger:
     def add_meteo_data(self, data_points: list) -> str:
         """Creates and adds sensor data to data_points. Returns a status message string."""
 
-        if (self.humidity_sensor is None
-                or self.temperature_sensor is None
-                or self.pressure_sensor is None):
-            return SENSOR_OFFLINE_MSG
-
         if self.logging:
+            if (self.humidity_sensor is None
+                    or self.temperature_sensor is None
+                    or self.pressure_sensor is None):
+                return SENSOR_OFFLINE_MSG
+
             humidity_value = self.humidity_sensor.get_currentRawValue()
             temperature_value = self.temperature_sensor.get_currentRawValue()
             pressure_value = self.pressure_sensor.get_currentRawValue()

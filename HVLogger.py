@@ -12,10 +12,10 @@ class HVLogger:
     def add_hv_data(self, data_points: list) -> str:
         """Parses HV logfile data and adds it to data_points. Returns a status message string."""
 
-        if not self.line:
-            return f"Couldn't read HV log file."
-
         if self.logging:
+            if not self.line:
+                return f"Couldn't read HV log file."
+
             # Get values from last line of HV log file
             hv_data = HVLogger.parse_hv_data(self.line)
 

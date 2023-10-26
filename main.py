@@ -7,17 +7,12 @@
 from config_db import *
 from config_data import *
 from config_gui import *
-
+from Sensors import Sensors
 from ISELogger import ISELogger
 from METEOLogger import METEOLogger
 from HVLogger import HVLogger
 
 from influxdb import InfluxDBClient
-from yoctopuce.yocto_genericsensor import *
-from yoctopuce.yocto_humidity import YHumidity
-from yoctopuce.yocto_temperature import YTemperature
-from yoctopuce.yocto_pressure import YPressure
-
 from pathlib import Path
 import webbrowser
 
@@ -25,15 +20,11 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter import PhotoImage
 from tkinter import filedialog
+from tkinter import messagebox
 
 import warnings
 from urllib3.exceptions import InsecureRequestWarning
 warnings.filterwarnings("ignore", category=InsecureRequestWarning)
-
-# Setup USB interface
-errmsg = YRefParam()
-if YAPI.RegisterHub("usb", errmsg) != YAPI.SUCCESS:
-    sys.exit("Init Error: " + errmsg.value)
 
 # Open connection with database
 client = InfluxDBClient(host=DB_HOST, port=DB_PORT, username=DB_USERNAME, password=DB_PASSWORD,
@@ -41,21 +32,22 @@ client = InfluxDBClient(host=DB_HOST, port=DB_PORT, username=DB_USERNAME, passwo
 
 hv_log_path = HV_LOG_DEFAULT_PATH  # Set the HV logfile path to the default
 
-# Find sensors
-mv_sensor = YGenericSensor.FindGenericSensor(VOLTAGE_SENSOR_ID)
-humidity_sensor = YHumidity.FirstHumidity()
-temperature_sensor = YTemperature.FirstTemperature()
-pressure_sensor = YPressure.FirstPressure()
+# Init sensors
+sensors = Sensors()
 
 # Instantiate Logger objects
-ise_logger = ISELogger(mv_sensor)
-meteo_logger = METEOLogger(humidity_sensor, temperature_sensor, pressure_sensor)
+ise_logger = ISELogger(sensors.mv)
+meteo_logger = METEOLogger(sensors.humidity, sensors.temperature, sensors.pressure)
 hv_logger = HVLogger()
 
 
 def main():
-    data_points = []
-    hv_logger.line = HVLogger.get_last_line(hv_log_path)
+    data_points = []  # Resets data collection to write to database
+    sensors.check_sensors()  # Check the connection status of sensors
+
+    # Gets the last line of the selected HV logfile
+    if hv_logger.logging:
+        hv_logger.line = HVLogger.get_last_line(hv_log_path)
 
     # Add data points and set status text accordingly
     ise_status_text.set(
@@ -118,6 +110,7 @@ def set_hv_log_path():
     global hv_log_path
 
     hv_log_path = hv_logfile_text.get()
+    tk.messagebox.showinfo(title='Success', message=f'HV logfile set to {hv_log_path}')
 
 
 def open_grafana():

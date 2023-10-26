@@ -10,10 +10,10 @@ class ISELogger:
     def add_ise_data(self, data_points: list) -> str:
         """Creates and adds sensor data to data_points. Returns a status message string."""
 
-        if not self.mv_sensor.isOnline():
-            return SENSOR_OFFLINE_MSG
-
         if self.logging:
+            if not self.mv_sensor.isOnline():
+                return SENSOR_OFFLINE_MSG
+
             mv_value = self.mv_sensor.get_currentRawValue()
 
             # Add data to data_points to be written
