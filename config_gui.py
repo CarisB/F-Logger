@@ -12,3 +12,5 @@ WRITE_SUCCESS_TEXT = "Successfully written to database"
 WRITE_SUCCESS_COLOR = '#0a0'
 WRITE_FAIL_TEXT = "ERROR: Failed to write to database"
 WRITE_FAIL_COLOR = '#b00'
+
+GRAFANA_BUTTON_TEXT = "Open Grafana Dashboard"

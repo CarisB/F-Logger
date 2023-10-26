@@ -208,7 +208,7 @@ db_write_status_label = tk.Label(master=root, textvariable=db_write_status_text,
 db_write_status_label.pack(anchor='e')
 
 # Link to Grafana
-grafana_button = ttk.Button(master=root, text='Open Link to Grafana', command=open_grafana)
+grafana_button = ttk.Button(master=root, text=GRAFANA_BUTTON_TEXT, command=open_grafana)
 grafana_button.pack(pady=10)
 
 # Run
