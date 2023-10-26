@@ -65,27 +65,33 @@ def main():
 def toggle_ise_logger():
     if ISELogger.logging:
         ise_toggle_button['image'] = off_img
+        ise_status_text.set(LOGGER_DISABLED_MSG)
         ISELogger.logging = False
     else:
         ise_toggle_button['image'] = on_img
+        ise_status_text.set(WAITING_TO_WRITE_MSG)
         ISELogger.logging = True
 
 
 def toggle_meteo_logger():
     if METEOLogger.logging:
         meteo_toggle_button['image'] = off_img
+        meteo_status_text.set(LOGGER_DISABLED_MSG)
         METEOLogger.logging = False
     else:
         meteo_toggle_button['image'] = on_img
+        meteo_status_text.set(WAITING_TO_WRITE_MSG)
         METEOLogger.logging = True
 
 
 def toggle_hv_logger():
     if HVLogger.logging:
         hv_toggle_button['image'] = off_img
+        hv_status_text.set(LOGGER_DISABLED_MSG)
         HVLogger.logging = False
     else:
         hv_toggle_button['image'] = on_img
+        hv_status_text.set(WAITING_TO_WRITE_MSG)
         HVLogger.logging = True
 
 

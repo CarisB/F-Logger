@@ -11,3 +11,4 @@ POLLING_MS = 2000
 
 SENSOR_OFFLINE_MSG = "Sensor is offline."
 LOGGER_DISABLED_MSG = "Logger is disabled."
+WAITING_TO_WRITE_MSG = "Waiting..."
