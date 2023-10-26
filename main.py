@@ -2,8 +2,14 @@
 - GUI Logging tool built for the F- Detector experiment in Building 904 @ CERN
 - Developer: Christopher Baek
 - Required modules: InfluxDB, Yoctopuce
+
+Sensors are stored as static variables in the Sensors class.
+Each logger has its own static class that stores its respective logging state (HVLogger also has HVLogger.line).
+The logger's add_data function adds the log data to data_points[] and returns a status string.
+main() is run initially by tkinter.after(0, main), and then run recursively by itself with tkinter.after(POLLING_MS, main)
 """
 
+# region Imports
 from config_db import *
 from config_data import *
 from config_gui import *
@@ -25,7 +31,10 @@ from tkinter import messagebox
 import warnings
 from urllib3.exceptions import InsecureRequestWarning
 warnings.filterwarnings("ignore", category=InsecureRequestWarning)
+# endregion
 
+
+# region Init
 # Open connection with database
 client = InfluxDBClient(host=DB_HOST, port=DB_PORT, username=DB_USERNAME, password=DB_PASSWORD,
                         database=DB_DATABASE, ssl=True, verify_ssl=False)
@@ -33,35 +42,10 @@ client = InfluxDBClient(host=DB_HOST, port=DB_PORT, username=DB_USERNAME, passwo
 hv_log_path = HV_LOG_DEFAULT_PATH  # Set the HV logfile path to the default
 
 Sensors.init()  # Find and initialize sensors
+# endregion
 
 
-def main():
-    data_points = []  # Resets data collection to write to database
-    Sensors.check_sensors()  # Check the connection status of sensors, try to set if missing
-
-    # Gets the last line of the selected HV logfile
-    if HVLogger.logging:
-        HVLogger.line = HVLogger.get_last_line(hv_log_path)
-
-    # Add data points and set status text accordingly
-    ise_status_text.set(
-        ISELogger.add_ise_data(data_points))
-    meteo_status_text.set(
-        METEOLogger.add_meteo_data(data_points))
-    hv_status_text.set(
-        HVLogger.add_hv_data(data_points))
-
-    if data_points and client.write_points(data_points):  # Successful write
-        db_write_status_text.set(WRITE_SUCCESS_TEXT)
-        db_write_status_label['fg'] = WRITE_SUCCESS_COLOR
-    else:  # Couldn't write to database
-        db_write_status_text.set(WRITE_FAIL_TEXT)
-        db_write_status_label['fg'] = WRITE_FAIL_COLOR
-
-    # Waits for POLLING_MS milliseconds, then callback to repeat loop
-    root.after(POLLING_MS, main)
-
-
+# region UI Functions
 def toggle_ise_logger():
     if ISELogger.logging:
         ise_toggle_button['image'] = off_img
@@ -115,10 +99,10 @@ def set_hv_log_path():
 
 def open_grafana():
     webbrowser.open_new(GRAFANA_URL)
+# endregion
 
 
-""" TKINTER GUI SECTION """
-
+# region GUI
 # Main window
 root = tk.Tk()
 root.title(WINDOW_TITLE)
@@ -218,7 +202,39 @@ db_write_status_label.pack(anchor='e')
 # Link to Grafana
 grafana_button = ttk.Button(master=root, text=GRAFANA_BUTTON_TEXT, command=open_grafana)
 grafana_button.pack(pady=10)
+# endregion
+
+
+# region Main Logic
+# Main loop (called back by tkinter.after() after POLLING_MS, set in the config_data module)
+def main():
+    data_points = []  # Resets data collection to write to database
+    Sensors.check_sensors()  # Check the connection status of sensors, try to set if missing
+
+    # Gets the last line of the selected HV logfile
+    if HVLogger.logging:
+        HVLogger.line = HVLogger.get_last_line(hv_log_path)
+
+    # Add data points and set status text accordingly
+    ise_status_text.set(
+        ISELogger.add_data(data_points))
+    meteo_status_text.set(
+        METEOLogger.add_data(data_points))
+    hv_status_text.set(
+        HVLogger.add_data(data_points))
+
+    if data_points and client.write_points(data_points):  # Successful write
+        db_write_status_text.set(WRITE_SUCCESS_TEXT)
+        db_write_status_label['fg'] = WRITE_SUCCESS_COLOR
+    else:  # Couldn't write to database
+        db_write_status_text.set(WRITE_FAIL_TEXT)
+        db_write_status_label['fg'] = WRITE_FAIL_COLOR
+
+    # Waits for POLLING_MS milliseconds, then callback to repeat loop
+    root.after(POLLING_MS, main)
+
 
 # Run
 root.after(0, main)
 root.mainloop()
+# endregion

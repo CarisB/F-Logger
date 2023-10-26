@@ -9,7 +9,7 @@ class HVLogger:
     line: str = ""
 
     @staticmethod
-    def add_hv_data(data_points: list) -> str:
+    def add_data(data_points: list) -> str:
         """Parses HV logfile data and adds it to data_points. Returns a status message string."""
 
         if HVLogger.logging:

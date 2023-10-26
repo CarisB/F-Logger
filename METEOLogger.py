@@ -6,7 +6,7 @@ class METEOLogger:
     logging: bool = False
 
     @staticmethod
-    def add_meteo_data(data_points: list) -> str:
+    def add_data(data_points: list) -> str:
         """Creates and adds sensor data to data_points. Returns a status message string."""
 
         if METEOLogger.logging:
