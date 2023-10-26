@@ -1,5 +1,5 @@
 HV_LOG_DEFAULT_PATH = "C:\\Users\\rpcgif\\cernbox\\Documents\\CAENGECO2020.log"
-GRAFANA_URL = "https://epdt-rd-monitoring.web.cern.ch/d/i_Rdg6C4z/904?orgId=1"
+GRAFANA_URL = "https://epdt-rd-monitoring.web.cern.ch/d/i_Rdg6C4z/904?orgId=1&from=now-7d&to=now&refresh=5m"
 
 VOLTAGE_SENSOR_ID = "RXMVOLT2-1CA34F.genericSensor1"
 MEASUREMENT_LABEL = "yoctopuce"
