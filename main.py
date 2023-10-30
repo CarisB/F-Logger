@@ -49,47 +49,74 @@ Sensors.init()  # Find and initialize sensors
 
 # region UI Functions
 def toggle_ise_logger():
-    if ISELogger.logging:
-        ise_toggle_button['image'] = off_img
-        ise_status_text.set(LOGGER_DISABLED_MSG)
-        ISELogger.logging = False
-    else:
-        ise_toggle_button['image'] = on_img
-        ise_status_text.set(WAITING_TO_WRITE_MSG)
-        ISELogger.logging = True
+    if ISELogger.logging: set_ise_logger(False)
+    else: set_ise_logger(True)
 
 
 def toggle_meteo_logger():
-    if METEOLogger.logging:
-        meteo_toggle_button['image'] = off_img
-        meteo_status_text.set(LOGGER_DISABLED_MSG)
-        METEOLogger.logging = False
-    else:
-        meteo_toggle_button['image'] = on_img
-        meteo_status_text.set(WAITING_TO_WRITE_MSG)
-        METEOLogger.logging = True
+    if METEOLogger.logging: set_meteo_logger(False)
+    else: set_meteo_logger(True)
 
 
 def toggle_fm_logger():
-    if FMLogger.logging:
-        fm_toggle_button['image'] = off_img
-        fm_status_text.set(LOGGER_DISABLED_MSG)
-        FMLogger.logging = False
-    else:
-        fm_toggle_button['image'] = on_img
-        fm_status_text.set(WAITING_TO_WRITE_MSG)
-        FMLogger.logging = True
+    if FMLogger.logging: set_fm_logger(False)
+    else: set_fm_logger(True)
 
 
 def toggle_hv_logger():
-    if HVLogger.logging:
-        hv_toggle_button['image'] = off_img
-        hv_status_text.set(LOGGER_DISABLED_MSG)
-        HVLogger.logging = False
+    if HVLogger.logging: set_hv_logger(False)
+    else: set_hv_logger(True)
+
+
+def set_all(on: bool):
+    set_ise_logger(on)
+    set_meteo_logger(on)
+    set_fm_logger(on)
+    set_hv_logger(on)
+
+
+def set_ise_logger(on: bool):
+    if on:
+        ise_toggle_button['image'] = on_img
+        ise_status_text.set(WAITING_TO_WRITE_MSG)
+        ISELogger.logging = True
     else:
+        ise_toggle_button['image'] = off_img
+        ise_status_text.set(LOGGER_DISABLED_MSG)
+        ISELogger.logging = False
+
+
+def set_meteo_logger(on: bool):
+    if on:
+        meteo_toggle_button['image'] = on_img
+        meteo_status_text.set(WAITING_TO_WRITE_MSG)
+        METEOLogger.logging = True
+    else:
+        meteo_toggle_button['image'] = off_img
+        meteo_status_text.set(LOGGER_DISABLED_MSG)
+        METEOLogger.logging = False
+
+
+def set_fm_logger(on: bool):
+    if on:
+        fm_toggle_button['image'] = on_img
+        fm_status_text.set(WAITING_TO_WRITE_MSG)
+        FMLogger.logging = True
+    else:
+        fm_toggle_button['image'] = off_img
+        fm_status_text.set(LOGGER_DISABLED_MSG)
+        FMLogger.logging = False
+
+
+def set_hv_logger(on: bool):
+    if on:
         hv_toggle_button['image'] = on_img
         hv_status_text.set(WAITING_TO_WRITE_MSG)
         HVLogger.logging = True
+    else:
+        hv_toggle_button['image'] = off_img
+        hv_status_text.set(LOGGER_DISABLED_MSG)
+        HVLogger.logging = False
 
 
 def browse_files():
@@ -130,6 +157,16 @@ off_img = PhotoImage(file=current_path + '/resources/off.png')
 title_label = ttk.Label(
     master=root, text=TITLE_LABEL, font=TITLE_FONT)
 title_label.pack(pady=20)
+
+# Enable All / Disable All
+toggle_all_frame = ttk.Frame(master=root)
+toggle_all_frame.pack(anchor='w', padx=30, pady=20)
+
+enable_all_button = ttk.Button(master=toggle_all_frame, text="Enable All", command=lambda:set_all(True))
+enable_all_button.pack(side='left')
+
+disable_all_button = ttk.Button(master=toggle_all_frame, text="Disable All", command=lambda:set_all(False))
+disable_all_button.pack(side='left', padx=20)
 
 # Main Toggle Frame
 toggle_frame = ttk.Frame(master=root)
