@@ -1,6 +1,6 @@
 from config_data import *
 from Sensors import Sensors
-import np
+import numpy as np
 
 
 class ISELogger:
