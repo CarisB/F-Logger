@@ -35,7 +35,7 @@ class ISELogger:
                 })
 
             # Return ISE info
-            return f"Voltage: {mv_value} mV, PPM: {ppm}"
+            return f"Voltage: {mv_value} mV, PPM: {round(ppm, 2)} ppm"
 
         else:  # ISELogger.logging = False
             return LOGGER_DISABLED_MSG
