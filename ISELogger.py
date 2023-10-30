@@ -1,6 +1,7 @@
 from config_data import *
 from Sensors import Sensors
-import numpy as np
+
+import math
 
 
 class ISELogger:
@@ -15,7 +16,7 @@ class ISELogger:
                 return SENSOR_OFFLINE_MSG
 
             mv_value = Sensors.mv.get_currentRawValue()
-            ppm = np.exp((mv_value - ISE_CALIBRATION_B) / -ISE_CALIBRATION_A)
+            ppm = math.exp((mv_value - ISE_CALIBRATION_B) / -ISE_CALIBRATION_A)
 
             # Add data to data_points to be written
             data_points.append(
