@@ -15,7 +15,7 @@ class FMLogger:
             if not Sensors.fm.isOnline():
                 return SENSOR_OFFLINE_MSG
 
-            fm_value = Sensors.mv.get_currentValue()
+            fm_value = Sensors.fm.get_currentValue()
 
             # Correcting the data reading
             calibration_curve = interp1d([0.5, 0.90, 1.30, 1.70, 2.10, 2.50],
