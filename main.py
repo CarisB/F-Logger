@@ -22,6 +22,7 @@ from HVLogger import HVLogger
 from influxdb import InfluxDBClient
 import os
 import webbrowser
+from datetime import datetime
 
 import tkinter as tk
 from tkinter import ttk
@@ -253,11 +254,16 @@ def main():
     fm_status_text.set(
         FMLogger.add_data(data_points))
 
+    # Timestamp
+    current_time = datetime.now()
+    timestamp = datetime.fromtimestamp(current_time.timestamp())
+    timestamp_str = timestamp.strftime("[%H:%M:%S]: ")
+
     if data_points and client.write_points(data_points):  # Successful write
-        db_write_status_text.set(WRITE_SUCCESS_TEXT)
+        db_write_status_text.set(timestamp_str + WRITE_SUCCESS_TEXT)
         db_write_status_label['fg'] = WRITE_SUCCESS_COLOR
     else:  # Couldn't write to database
-        db_write_status_text.set(WRITE_FAIL_TEXT)
+        db_write_status_text.set(timestamp_str + WRITE_FAIL_TEXT)
         db_write_status_label['fg'] = WRITE_FAIL_COLOR
 
     # Waits for POLLING_MS milliseconds, then callback to repeat loop
