@@ -24,7 +24,7 @@ class FMLogger:
             adjusted_flow = 0
 
             try:
-                adjusted_flow = calibration_curve(fm_value)
+                adjusted_flow = float(calibration_curve(fm_value))
             except:
                 if fm_value < 0.5:
                     adjusted_flow = 0
@@ -33,7 +33,7 @@ class FMLogger:
 
             values = {
                 'flowvolts': fm_value,
-                'flow': float(adjusted_flow)
+                'flow': adjusted_flow
             }
 
             # Add data to data_points to be written
@@ -50,7 +50,7 @@ class FMLogger:
                 })
 
             # Return FM info
-            return f"Voltage: {fm_value} mV, Flow: {adjusted_flow} L/min"
+            return f"Voltage: {fm_value} mV, Flow: {round(adjusted_flow, 3)} L/min"
 
         else:  # FMLogger.logging = False
             return LOGGER_DISABLED_MSG
