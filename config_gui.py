@@ -1,5 +1,5 @@
 WINDOW_WIDTH = 800
-WINDOW_HEIGHT = 500
+WINDOW_HEIGHT = 600
 
 WINDOW_TITLE = "F- Experiment Logger Tool"
 TITLE_LABEL = "F- Experiment Logger Tool"

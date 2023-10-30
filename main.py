@@ -69,6 +69,17 @@ def toggle_meteo_logger():
         METEOLogger.logging = True
 
 
+def toggle_fm_logger():
+    if FMLogger.logging:
+        fm_toggle_button['image'] = off_img
+        fm_status_text.set(LOGGER_DISABLED_MSG)
+        FMLogger.logging = False
+    else:
+        fm_toggle_button['image'] = on_img
+        fm_status_text.set(WAITING_TO_WRITE_MSG)
+        FMLogger.logging = True
+
+
 def toggle_hv_logger():
     if HVLogger.logging:
         hv_toggle_button['image'] = off_img
@@ -128,6 +139,7 @@ toggle_frame.columnconfigure(index=2, weight=10)
 toggle_frame.rowconfigure(index=0, weight=1)
 toggle_frame.rowconfigure(index=1, weight=1)
 toggle_frame.rowconfigure(index=2, weight=1)
+toggle_frame.rowconfigure(index=3, weight=1)
 
 # ISE Toggle Frame
 ise_toggle_label = tk.Label(master=toggle_frame, text='ISE Logger',
@@ -158,6 +170,21 @@ meteo_status_text = tk.StringVar()
 meteo_status_label = ttk.Label(master=toggle_frame, textvariable=meteo_status_text)
 meteo_status_label.grid(column=2, row=1,
                         sticky=tk.W, padx=50, pady=5)
+
+# FM Toggle Frame
+fm_toggle_label = tk.Label(master=toggle_frame, text='FM Logger',
+                           anchor='w', font=TOGGLE_LABEL_FONT)
+fm_toggle_label.grid(column=0, row=3,
+                     sticky=tk.W, padx=5, pady=5)
+
+fm_toggle_button = ttk.Button(master=toggle_frame, image=off_img, command=toggle_fm_logger)
+fm_toggle_button.grid(column=1, row=3,
+                      sticky=tk.W, padx=5, pady=5)
+
+fm_status_text = tk.StringVar()
+fm_status_label = ttk.Label(master=toggle_frame, textvariable=fm_status_text)
+fm_status_label.grid(column=2, row=3,
+                     sticky=tk.W, padx=50, pady=5)
 
 # HV Toggle Frame
 hv_toggle_label = tk.Label(master=toggle_frame, text='HV Logger',
@@ -223,8 +250,8 @@ def main():
         METEOLogger.add_data(data_points))
     hv_status_text.set(
         HVLogger.add_data(data_points))
-
-    FMLogger.add_data(data_points)
+    fm_status_text.set(
+        FMLogger.add_data(data_points))
 
     if data_points and client.write_points(data_points):  # Successful write
         db_write_status_text.set(WRITE_SUCCESS_TEXT)
