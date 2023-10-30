@@ -8,6 +8,7 @@ from yoctopuce.yocto_pressure import YPressure
 
 class Sensors:
     mv: YGenericSensor
+    fm: YGenericSensor
     humidity: YHumidity
     temperature: YTemperature
     pressure: YPressure
@@ -20,6 +21,7 @@ class Sensors:
             sys.exit("Init Error: " + errmsg.value)
 
         Sensors.mv = YGenericSensor.FindGenericSensor(VOLTAGE_SENSOR_ID)
+        Sensors.fm = YGenericSensor.FindGenericSensor(FLOWMETER_ID)
         Sensors.humidity = YHumidity.FirstHumidity()
         Sensors.temperature = YTemperature.FirstTemperature()
         Sensors.pressure = YPressure.FirstPressure()
@@ -28,6 +30,8 @@ class Sensors:
     def check_sensors():
         if not Sensors.mv.isOnline():
             Sensors.mv = YGenericSensor.FindGenericSensor(VOLTAGE_SENSOR_ID)
+        if not Sensors.fm.isOnline():
+            Sensors.fm = YGenericSensor.FindGenericSensor(FLOWMETER_ID)
         if not Sensors.humidity:
             Sensors.humidity = YHumidity.FirstHumidity()
         if not Sensors.temperature:

@@ -1,7 +1,7 @@
 """
 - GUI Logging tool built for the F- Detector experiment in Building 904 @ CERN
 - Developer: Christopher Baek
-- Required modules: InfluxDB, Yoctopuce
+- Required modules: InfluxDB, Yoctopuce, SciPy
 
 Sensors are stored as static variables in the Sensors class.
 Each logger has its own static class that stores its respective logging state (HVLogger also has HVLogger.line).
@@ -16,6 +16,7 @@ from config_gui import *
 from Sensors import Sensors
 from ISELogger import ISELogger
 from METEOLogger import METEOLogger
+from FMLogger import FMLogger
 from HVLogger import HVLogger
 
 from influxdb import InfluxDBClient
@@ -222,6 +223,8 @@ def main():
         METEOLogger.add_data(data_points))
     hv_status_text.set(
         HVLogger.add_data(data_points))
+
+    FMLogger.add_data(data_points)
 
     if data_points and client.write_points(data_points):  # Successful write
         db_write_status_text.set(WRITE_SUCCESS_TEXT)
