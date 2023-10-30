@@ -186,7 +186,6 @@ class GUI:
                                     text=GRAFANA_BUTTON_TEXT)
         cls.grafana_button.pack(pady=10)
 
-    # region UI Functions
     @classmethod
     def toggle_ise_logger(cls):
         if ISELogger.logging: cls.set_ise_logger(False)
