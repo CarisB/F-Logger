@@ -15,7 +15,7 @@ from tkinter import filedialog
 from tkinter import messagebox
 
 
-class MainGUI:
+class GUI:
     root: tk.Tk
     hv_log_path = HV_LOG_DEFAULT_PATH  # Set the HV logfile path to the default
 
@@ -76,11 +76,11 @@ class MainGUI:
         cls.toggle_all_frame = ttk.Frame(master=cls.root)
         cls.toggle_all_frame.pack(anchor='w', padx=30, pady=20)
 
-        cls.enable_all_button = ttk.Button(master=cls.toggle_all_frame, command=lambda: MainGUI.set_all(True),
+        cls.enable_all_button = ttk.Button(master=cls.toggle_all_frame, command=lambda: GUI.set_all(True),
                                            text='Enable All')
         cls.enable_all_button.pack(side='left')
 
-        cls.disable_all_button = ttk.Button(master=cls.toggle_all_frame, command=lambda: MainGUI.set_all(False),
+        cls.disable_all_button = ttk.Button(master=cls.toggle_all_frame, command=lambda: GUI.set_all(False),
                                             text='Disable All')
         cls.disable_all_button.pack(side='left', padx=20)
 
@@ -269,7 +269,7 @@ class MainGUI:
 
     @classmethod
     def set_hv_log_path(cls):
-        MainGUI.hv_log_path = cls.hv_logfile_text.get()
+        GUI.hv_log_path = cls.hv_logfile_text.get()
         tk.messagebox.showinfo(title='Success', message=f'HV logfile set to {cls.hv_log_path}')
 
     @staticmethod

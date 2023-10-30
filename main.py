@@ -17,7 +17,7 @@ from ISELogger import ISELogger
 from METEOLogger import METEOLogger
 from FMLogger import FMLogger
 from HVLogger import HVLogger
-from MainGUI import MainGUI
+from GUI import GUI
 
 from influxdb import InfluxDBClient
 
@@ -31,7 +31,7 @@ warnings.filterwarnings("ignore", category=InsecureRequestWarning)
 client = InfluxDBClient(host=DB_HOST, port=DB_PORT, username=DB_USERNAME, password=DB_PASSWORD,
                         database=DB_DATABASE, ssl=True, verify_ssl=False)
 Sensors.init()  # Find and initialize sensors
-MainGUI.init()  # Initialize GUI
+GUI.init()  # Initialize GUI
 
 
 # Main loop (called back by tkinter.after() after POLLING_MS, set in the config_data module)
@@ -41,16 +41,16 @@ def main():
 
     # Gets the last line of the selected HV logfile
     if HVLogger.logging:
-        HVLogger.line = HVLogger.get_last_line(MainGUI.hv_log_path)
+        HVLogger.line = HVLogger.get_last_line(GUI.hv_log_path)
 
     # Add data points and set status text accordingly
-    MainGUI.ise_status_text.set(
+    GUI.ise_status_text.set(
         ISELogger.add_data(data_points))
-    MainGUI.meteo_status_text.set(
+    GUI.meteo_status_text.set(
         METEOLogger.add_data(data_points))
-    MainGUI.fm_status_text.set(
+    GUI.fm_status_text.set(
         FMLogger.add_data(data_points))
-    MainGUI.hv_status_text.set(
+    GUI.hv_status_text.set(
         HVLogger.add_data(data_points))
 
     # Timestamp
@@ -59,16 +59,16 @@ def main():
     timestamp_str = timestamp.strftime("[%H:%M:%S]: ")
 
     if data_points and client.write_points(data_points):  # Successful write
-        MainGUI.db_write_status_text.set(timestamp_str + WRITE_SUCCESS_TEXT)
-        MainGUI.db_write_status_label['fg'] = WRITE_SUCCESS_COLOR
+        GUI.db_write_status_text.set(timestamp_str + WRITE_SUCCESS_TEXT)
+        GUI.db_write_status_label['fg'] = WRITE_SUCCESS_COLOR
     else:  # Couldn't write to database
-        MainGUI.db_write_status_text.set(timestamp_str + WRITE_FAIL_TEXT)
-        MainGUI.db_write_status_label['fg'] = WRITE_FAIL_COLOR
+        GUI.db_write_status_text.set(timestamp_str + WRITE_FAIL_TEXT)
+        GUI.db_write_status_label['fg'] = WRITE_FAIL_COLOR
 
     # Waits for POLLING_MS milliseconds, then callback to repeat loop
-    MainGUI.root.after(POLLING_MS, main)
+    GUI.root.after(POLLING_MS, main)
 
 
 # Run
-MainGUI.root.after(0, main)
-MainGUI.root.mainloop()
+GUI.root.after(0, main)
+GUI.root.mainloop()
