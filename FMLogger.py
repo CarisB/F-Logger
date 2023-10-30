@@ -50,7 +50,7 @@ class FMLogger:
                 })
 
             # Return FM info
-            return f"Flow (mV): {fm_value}, Flow (adjusted): {adjusted_flow}"
+            return f"Voltage: {fm_value}, Flow: {adjusted_flow}"
 
         else:  # FMLogger.logging = False
             return LOGGER_DISABLED_MSG
