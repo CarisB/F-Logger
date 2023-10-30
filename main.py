@@ -174,31 +174,31 @@ meteo_status_label.grid(column=2, row=1,
 # FM Toggle Frame
 fm_toggle_label = tk.Label(master=toggle_frame, text='FM Logger',
                            anchor='w', font=TOGGLE_LABEL_FONT)
-fm_toggle_label.grid(column=0, row=3,
+fm_toggle_label.grid(column=0, row=2,
                      sticky=tk.W, padx=5, pady=5)
 
 fm_toggle_button = ttk.Button(master=toggle_frame, image=off_img, command=toggle_fm_logger)
-fm_toggle_button.grid(column=1, row=3,
+fm_toggle_button.grid(column=1, row=2,
                       sticky=tk.W, padx=5, pady=5)
 
 fm_status_text = tk.StringVar()
 fm_status_label = ttk.Label(master=toggle_frame, textvariable=fm_status_text)
-fm_status_label.grid(column=2, row=3,
+fm_status_label.grid(column=2, row=2,
                      sticky=tk.W, padx=50, pady=5)
 
 # HV Toggle Frame
 hv_toggle_label = tk.Label(master=toggle_frame, text='HV Logger',
                            anchor='w', font=TOGGLE_LABEL_FONT)
-hv_toggle_label.grid(column=0, row=2,
+hv_toggle_label.grid(column=0, row=3,
                      sticky=tk.W, padx=5, pady=5)
 
 hv_toggle_button = ttk.Button(master=toggle_frame, image=off_img, command=toggle_hv_logger)
-hv_toggle_button.grid(column=1, row=2,
+hv_toggle_button.grid(column=1, row=3,
                       sticky=tk.W, padx=5, pady=5)
 
 hv_status_text = tk.StringVar()
 hv_status_label = ttk.Label(master=toggle_frame, textvariable=hv_status_text)
-hv_status_label.grid(column=2, row=2,
+hv_status_label.grid(column=2, row=3,
                      sticky=tk.W, padx=50, pady=5)
 
 # HV Logfile
