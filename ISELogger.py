@@ -27,15 +27,12 @@ class ISELogger:
                         "setup": TAG_SETUP
                     },
                     "fields": {
-                        "voltage": mv_value,
-                        "ppm": ppm,
-                        "calibration_a": ISE_CALIBRATION_A,
-                        "calibration_b": ISE_CALIBRATION_B
+                        "voltage": mv_value
                     }
                 })
 
             # Return ISE info
-            return f"Voltage: {mv_value} mV, PPM: {ppm}"
+            return f"Voltage: {mv_value} mV"
 
         else:  # ISELogger.logging = False
             return LOGGER_DISABLED_MSG
