@@ -27,10 +27,7 @@ class ISELogger:
                         "setup": TAG_SETUP
                     },
                     "fields": {
-                        "voltage": mv_value,
-                        "ppm": ppm,
-                        "calibration_a": ISE_CALIBRATION_A,
-                        "calibration_b": ISE_CALIBRATION_B
+                        "voltage": mv_value
                     }
                 })
 
