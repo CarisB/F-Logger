@@ -39,10 +39,6 @@ def main():
     data_points = []  # Resets data collection to write to database
     Sensors.check_sensors()  # Check the connection status of sensors, try to set if missing
 
-    # Gets the last line of the selected HV logfile
-    if HVLogger.logging:
-        HVLogger.line = HVLogger.get_last_line(GUI.hv_log_path)
-
     # Add data points and set status text accordingly
     GUI.ise_status_text.set(
         ISELogger.add_data(data_points))

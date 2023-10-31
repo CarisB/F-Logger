@@ -9,6 +9,7 @@ class HVLogger:
     VOLTAGE_PARAMETER = "VMonH"
 
     logging: bool = False
+    hv_log_path = HV_LOG_DEFAULT_PATH  # Set the HV logfile path to the default
     line: str = ""  # The logfile line being processed
     last_current_line: str = ""  # The last known current(I) reading from the log
 
@@ -17,6 +18,9 @@ class HVLogger:
         """Parses HV logfile data and adds it to data_points. Returns a status message string."""
 
         if cls.logging:
+            # Gets the last line of the selected HV logfile
+            cls.line = cls.get_last_line(cls.hv_log_path)
+
             if not cls.line:
                 return f"Couldn't read HV log file."
 

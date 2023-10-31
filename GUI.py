@@ -17,7 +17,6 @@ from tkinter import messagebox
 
 class GUI:
     root: tk.Tk
-    hv_log_path = HV_LOG_DEFAULT_PATH  # Set the HV logfile path to the default
 
     on_img: PhotoImage
     off_img: PhotoImage
@@ -164,7 +163,7 @@ class GUI:
         cls.hv_logfile_label.pack(anchor='w')
 
         cls.hv_logfile_text = tk.StringVar()
-        cls.hv_logfile_text.set(cls.hv_log_path)
+        cls.hv_logfile_text.set(HVLogger.hv_log_path)
         cls.hv_logfile_entry = tk.Entry(master=cls.hv_logfile_frame, textvariable=cls.hv_logfile_text,
                                         width=50, fg='#333', bg='#eee')
         cls.hv_logfile_entry.pack(side='left')
@@ -268,8 +267,8 @@ class GUI:
 
     @classmethod
     def set_hv_log_path(cls):
-        GUI.hv_log_path = cls.hv_logfile_text.get()
-        tk.messagebox.showinfo(title='Success', message=f'HV logfile set to {cls.hv_log_path}')
+        HVLogger.hv_log_path = cls.hv_logfile_text.get()
+        tk.messagebox.showinfo(title='Success', message=f'HV logfile set to {HVLogger.hv_log_path}')
 
     @staticmethod
     def open_grafana():
