@@ -5,11 +5,11 @@ from Sensors import Sensors
 class METEOLogger:
     logging: bool = False
 
-    @staticmethod
-    def add_data(data_points: list) -> str:
+    @classmethod
+    def add_data(cls, data_points: list) -> str:
         """Creates and adds sensor data to data_points. Returns a status message string."""
 
-        if METEOLogger.logging:
+        if cls.logging:
             if Sensors.humidity is None or Sensors.temperature is None or Sensors.pressure is None:
                 return SENSOR_OFFLINE_MSG
 

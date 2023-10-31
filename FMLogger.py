@@ -7,11 +7,11 @@ from scipy.interpolate import interp1d
 class FMLogger:
     logging: bool = False
 
-    @staticmethod
-    def add_data(data_points: list) -> str:
+    @classmethod
+    def add_data(cls, data_points: list) -> str:
         """Creates and adds sensor data to data_points. Returns a status message string."""
 
-        if FMLogger.logging:
+        if cls.logging:
             if not Sensors.fm.isOnline():
                 return SENSOR_OFFLINE_MSG
 
