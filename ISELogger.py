@@ -5,18 +5,21 @@ import math
 
 
 class ISELogger:
+    ISE_CALIBRATION_A = 24.71
+    ISE_CALIBRATION_B = 98.96
+
     logging: bool = False
 
-    @staticmethod
-    def add_data(data_points: list) -> str:
+    @classmethod
+    def add_data(cls, data_points: list) -> str:
         """Creates and adds sensor data to data_points. Returns a status message string."""
 
-        if ISELogger.logging:
+        if cls.logging:
             if not Sensors.mv.isOnline():
                 return SENSOR_OFFLINE_MSG
 
             mv_value = Sensors.mv.get_currentRawValue()
-            ppm = math.exp((mv_value - ISE_CALIBRATION_B) / -ISE_CALIBRATION_A)
+            ppm = math.exp((mv_value - cls.ISE_CALIBRATION_B) / -cls.ISE_CALIBRATION_A)
 
             # Add data to data_points to be written
             data_points.append(
@@ -30,8 +33,8 @@ class ISELogger:
                     "fields": {
                         "voltage": mv_value,
                         "ppm": ppm,
-                        "calibration_a": ISE_CALIBRATION_A,
-                        "calibration_b": ISE_CALIBRATION_B
+                        "calibration_a": cls.ISE_CALIBRATION_A,
+                        "calibration_b": cls.ISE_CALIBRATION_B
                     }
                 })
 
