@@ -30,15 +30,12 @@ class HVLogger:
             # but we don't need the voltage reading all the time
             # If the line is a voltage reading, log the last known current again
             if cls.line is not cls.last_current_line:  # line is a voltage reading
-                status_info = f"Voltage: {data['value']} V"
                 # Also need to append the last known current(I) reading to database
                 data = cls.parse_hv_data(cls.last_current_line)
                 cls.append_data(data_points, data)
-            else:  # line is a current(I) reading
-                status_info = f"Current: {data['value']} μA"
 
             # Returns HV info
-            return status_info
+            return f"Current: {data['value']} μA"
 
         else:
             return LOGGER_DISABLED_MSG
