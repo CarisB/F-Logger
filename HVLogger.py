@@ -10,7 +10,7 @@ class HVLogger:
 
     logging: bool = False
     line: str = ""  # The logfile line being processed
-    last_current_line: str = ""  # The last known current (I) reading from the log
+    last_current_line: str = ""  # The last known current(I) reading from the log
 
     @classmethod
     def add_data(cls, data_points: list) -> str:
@@ -26,15 +26,19 @@ class HVLogger:
             # Add data to data_points to be written
             cls.append_data(data_points, data)
 
-            # We want to log the current (I) reading every cycle,
+            # We want to log the current(I) reading every cycle,
             # but we don't need the voltage reading all the time
             # If the line is a voltage reading, log the last known current again
-            if cls.line is not cls.last_current_line:
+            if cls.line is not cls.last_current_line:  # line is a voltage reading
+                # Also need to append the last known current(I) reading to database
                 data = cls.parse_hv_data(cls.last_current_line)
                 cls.append_data(data_points, data)
+                status_info = f"Voltage: {data['value']} V"
+            else:  # line is a current(I) reading
+                status_info = f"Current: {data['value']} μA"
 
             # Returns HV info
-            return f"Current: {data['value']} μA"
+            return status_info
 
         else:
             return LOGGER_DISABLED_MSG
@@ -88,7 +92,7 @@ class HVLogger:
 
                 result = f.readline().decode()  # Reads the line
 
-                if cls.CURRENT_PARAMETER in result:  # If the line is a current (I) reading, store it
+                if cls.CURRENT_PARAMETER in result:  # If the line is a current(I) reading, store it
                     cls.last_current_line = result
 
                 return result
