@@ -66,18 +66,33 @@ class HVLogger:
 
         try:
             with open(file_path, 'rb') as f:
-                res = ""
+                # Reading the logfile, starting from the last line such that
+                # the entire logfile doesn't have to be stored in memory
                 try:  # catch OSError in case of a one line file
-                    f.seek(-2, os.SEEK_END)
-                    while f.read(1) != b'\n':
+                    # Logfile format is:
+                    '''
+                    [2023-10-30T16:28:57]: [HV] bd [0] ch [0] par [IMonH] val [0.34]; 
+                    
+                    '''
+                    # (Note the space after the line and the line-break)
+
+                    f.seek(-2, os.SEEK_END)  # Move cursor to end of last line, before the ending space
+
+                    while f.read(1) != b'\n':  # Move cursor forward one; if not line-break, keep going back
                         f.seek(-2, os.SEEK_CUR)
-                    res = f.readline().decode()
-                    if cls.CURRENT_PARAMETER in res:
-                        cls.last_current_line = res
-                except OSError:
+
+                    # Line-break was detected, so cursor is now at start of line we want to read
+
+                except OSError:  # File is one line, so just place cursor at beginning
                     f.seek(0)
 
-                return res
+                result = f.readline().decode()  # Reads the line
+
+                if cls.CURRENT_PARAMETER in result:  # If the line is a current (I) reading, store it
+                    cls.last_current_line = result
+
+                return result
+
         except FileNotFoundError:  # Couldn't find log
             return None
 
