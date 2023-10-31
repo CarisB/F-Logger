@@ -263,7 +263,7 @@ class GUI:
             title='Select a File',
             filetypes=(('.log files', '*.log'), ('All files', '*.*')))
 
-        if filename is not "":  # If file dialog wasn't
+        if filename is not "":  # If file dialog wasn't cancelled
             cls.hv_logfile_text.set(filename)
 
     @classmethod
