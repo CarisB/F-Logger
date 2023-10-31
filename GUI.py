@@ -75,11 +75,13 @@ class GUI:
         cls.toggle_all_frame = ttk.Frame(master=cls.root)
         cls.toggle_all_frame.pack(anchor='w', padx=30, pady=20)
 
-        cls.enable_all_button = ttk.Button(master=cls.toggle_all_frame, command=lambda: GUI.set_all(True),
+        cls.enable_all_button = ttk.Button(master=cls.toggle_all_frame,
+                                           command=lambda: GUI.set_all(True),
                                            text='Enable All')
         cls.enable_all_button.pack(side='left')
 
-        cls.disable_all_button = ttk.Button(master=cls.toggle_all_frame, command=lambda: GUI.set_all(False),
+        cls.disable_all_button = ttk.Button(master=cls.toggle_all_frame,
+                                            command=lambda: GUI.set_all(False),
                                             text='Disable All')
         cls.disable_all_button.pack(side='left', padx=20)
 
@@ -100,7 +102,9 @@ class GUI:
         cls.ise_toggle_label.grid(column=0, row=0,
                                   sticky=tk.W, padx=5, pady=5)
 
-        cls.ise_toggle_button = ttk.Button(master=cls.toggle_frame, image=cls.off_img, command=cls.toggle_ise_logger)
+        cls.ise_toggle_button = ttk.Button(master=cls.toggle_frame,
+                                           command=cls.toggle_ise_logger,
+                                           image=cls.off_img)
         cls.ise_toggle_button.grid(column=1, row=0,
                                    sticky=tk.W, padx=5, pady=5)
 
@@ -115,7 +119,9 @@ class GUI:
         cls.meteo_toggle_label.grid(column=0, row=1,
                                     sticky=tk.W, padx=5, pady=5)
 
-        cls.meteo_toggle_button = ttk.Button(master=cls.toggle_frame, image=cls.off_img, command=cls.toggle_meteo_logger)
+        cls.meteo_toggle_button = ttk.Button(master=cls.toggle_frame,
+                                             command=cls.toggle_meteo_logger,
+                                             image=cls.off_img)
         cls.meteo_toggle_button.grid(column=1, row=1,
                                      sticky=tk.W, padx=5, pady=5)
 
@@ -130,7 +136,9 @@ class GUI:
         cls.fm_toggle_label.grid(column=0, row=2,
                                  sticky=tk.W, padx=5, pady=5)
 
-        cls.fm_toggle_button = ttk.Button(master=cls.toggle_frame, image=cls.off_img, command=cls.toggle_fm_logger)
+        cls.fm_toggle_button = ttk.Button(master=cls.toggle_frame,
+                                          command=cls.toggle_fm_logger,
+                                          image=cls.off_img)
         cls.fm_toggle_button.grid(column=1, row=2,
                                   sticky=tk.W, padx=5, pady=5)
 
@@ -145,7 +153,9 @@ class GUI:
         cls.hv_toggle_label.grid(column=0, row=3,
                                  sticky=tk.W, padx=5, pady=5)
 
-        cls.hv_toggle_button = ttk.Button(master=cls.toggle_frame, image=cls.off_img, command=cls.toggle_hv_logger)
+        cls.hv_toggle_button = ttk.Button(master=cls.toggle_frame,
+                                          command=cls.toggle_hv_logger,
+                                          image=cls.off_img)
         cls.hv_toggle_button.grid(column=1, row=3,
                                   sticky=tk.W, padx=5, pady=5)
 
@@ -168,21 +178,26 @@ class GUI:
                                         width=50, fg='#333', bg='#eee')
         cls.hv_logfile_entry.pack(side='left')
 
-        cls.hv_logfile_browse_button = tk.Button(master=cls.hv_logfile_frame, text='Browse Files...', command=cls.browse_files)
+        cls.hv_logfile_browse_button = tk.Button(master=cls.hv_logfile_frame,
+                                                 command=cls.browse_files,
+                                                 text='Browse Files...')
         cls.hv_logfile_browse_button.pack(side='left')
 
-        cls.hv_logfile_select_button = tk.Button(master=cls.hv_logfile_frame, text='Select', command=cls.set_hv_log_path)
+        cls.hv_logfile_select_button = tk.Button(master=cls.hv_logfile_frame,
+                                                 command=cls.set_hv_log_path,
+                                                 text='Select')
         cls.hv_logfile_select_button.pack(side='left')
 
         # DB Write Status
         cls.db_write_status_text = tk.StringVar()
         cls.db_write_status_label = tk.Label(master=cls.root, textvariable=cls.db_write_status_text,
-                                         padx=50, pady=10)
+                                             padx=50, pady=10)
         cls.db_write_status_label.pack(anchor='e')
 
         # Link to Grafana
-        cls.grafana_button = ttk.Button(master=cls.root, command=cls.open_grafana,
-                                    text=GRAFANA_BUTTON_TEXT)
+        cls.grafana_button = ttk.Button(master=cls.root,
+                                        command=cls.open_grafana,
+                                        text=GRAFANA_BUTTON_TEXT)
         cls.grafana_button.pack(pady=10)
 
     @classmethod
@@ -263,7 +278,7 @@ class GUI:
             title='Select a File',
             filetypes=(('.log files', '*.log'), ('All files', '*.*')))
 
-        if filename is not "":  # If file dialog wasn't cancelled
+        if filename != "":  # If file dialog wasn't cancelled
             cls.hv_logfile_text.set(filename)
 
     @classmethod
