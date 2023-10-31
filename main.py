@@ -1,7 +1,7 @@
 """
 - GUI Logging tool built for the F- Detector experiment in Building 904 @ CERN
 - Developer: Christopher Baek
-- Required modules: InfluxDB, Yoctopuce, SciPy
+- Required modules: Pydantic-Settings, InfluxDB, Yoctopuce, SciPy
 
 Sensors are stored as static variables in the Sensors class.
 Each logger has its own static class that stores its respective logging state (HVLogger also has HVLogger.line).
@@ -9,7 +9,6 @@ The logger's add_data function adds the log data to data_points[] and returns a 
 main() is first run by root.after(0, main), and then run recursively by itself with root.after(POLLING_MS, main)
 """
 
-from config_db import *
 from config_data import *
 from config_gui import *
 from Sensors import Sensors
@@ -19,6 +18,7 @@ from FMLogger import FMLogger
 from HVLogger import HVLogger
 from GUI import GUI
 
+from pydantic_settings import BaseSettings
 from influxdb import InfluxDBClient
 
 from datetime import datetime
@@ -27,9 +27,28 @@ from urllib3.exceptions import InsecureRequestWarning
 warnings.filterwarnings("ignore", category=InsecureRequestWarning)
 
 
+class Settings(BaseSettings):  # Database settings (stored in local .env file)
+    DB_HOST: str
+    DB_PORT: int
+    DB_USERNAME: str
+    DB_PASSWORD: str
+    DB_DATABASE: str
+    DB_SSL: bool
+    DB_VERIFYSSL: bool
+
+    class Config:
+        env_file = '.env'
+
+
 # Open connection with database
-client = InfluxDBClient(host=DB_HOST, port=DB_PORT, username=DB_USERNAME, password=DB_PASSWORD,
-                        database=DB_DATABASE, ssl=True, verify_ssl=False)
+config = Settings()
+client = InfluxDBClient(host=config.DB_HOST,
+                        port=config.DB_PORT,
+                        username=config.DB_USERNAME,
+                        password=config.DB_PASSWORD,
+                        database=config.DB_DATABASE,
+                        ssl=config.DB_SSL,
+                        verify_ssl=config.DB_VERIFYSSL)
 Sensors.init()  # Find and initialize sensors
 GUI.init()  # Initialize GUI
 
