@@ -261,9 +261,10 @@ class GUI:
         filename = filedialog.askopenfilename(
             initialdir='/',
             title='Select a File',
-            filetypes=(('.log files', '*.log'), ('All files', '*.*'))
-        )
-        cls.hv_logfile_text.set(filename)
+            filetypes=(('.log files', '*.log'), ('All files', '*.*')))
+
+        if filename is not "":
+            cls.hv_logfile_text.set(filename)
 
     @classmethod
     def set_hv_log_path(cls):
