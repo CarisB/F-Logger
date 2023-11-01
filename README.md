@@ -32,3 +32,5 @@ DB_DATABASE = "db_database"
 ```
 
 The program can be started simply by running `main.py` through the Python command-line.
+
+![Screenshot of F- Logger](docs/screenshot.png)
