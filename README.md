@@ -1,6 +1,8 @@
 # F- Detector Experiment: Logger Tool
 *For Building 904 @ CERN*
 
+![Screenshot of F- Logger](docs/screenshot.png)
+
 ## Purpose
 This tool was specifically developed for the F- Straw Detector experiment at CERN.
 The experiment requires the logging of several sensors, including:
