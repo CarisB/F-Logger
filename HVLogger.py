@@ -5,6 +5,9 @@ from datetime import datetime
 
 
 class HVLogger:
+    TABLE_NAME = "hv"
+    TAG_PLACE = "904"
+    TAG_MODULE = "V1741A"
     CURRENT_PARAMETER = "IMonH"
     VOLTAGE_PARAMETER = "VMonH"
 
@@ -44,17 +47,17 @@ class HVLogger:
         else:
             return LOGGER_DISABLED_MSG
 
-    @staticmethod
-    def append_data(data_points: list, data: dict):
+    @classmethod
+    def append_data(cls, data_points: list, data: dict):
         if not data_points or not data:
             return
 
         data_points.append(
             {
-                "measurement": "hv",
+                "measurement": cls.TABLE_NAME,
                 "tags": {
-                    "place": TAG_PLACE,
-                    "module": TAG_MODULE,
+                    "place": cls.TAG_PLACE,
+                    "module": cls.TAG_MODULE,
                     "board": str(data['board']),
                     "channel": str(data['channel']),
                     "par": str(data['parameter'])

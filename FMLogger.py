@@ -5,6 +5,12 @@ from scipy.interpolate import interp1d
 
 
 class FMLogger:
+    TABLE_NAME = "yoctopuce"
+    DEVICE_NAME = "Yoctopuce-Flowmeter"
+    TAG_HOSTNAME = "pcgasteam01"
+    TAG_PLACE = "904"
+    TAG_SETUP = "ise"
+
     logging: bool = False
 
     @classmethod
@@ -39,12 +45,12 @@ class FMLogger:
             # Add data to data_points to be written
             data_points.append(
                 {
-                    "measurement": MEASUREMENT_LABEL,
+                    "measurement": cls.TABLE_NAME,
                     "tags": {
-                        "hostname": TAG_HOSTNAME,
-                        "device": DEVICE_ID,
-                        "place": TAG_PLACE,
-                        "setup": TAG_SETUP
+                        "hostname": cls.TAG_HOSTNAME,
+                        "device": cls.DEVICE_NAME,
+                        "place": cls.TAG_PLACE,
+                        "setup": cls.TAG_SETUP
                     },
                     "fields": values
                 })

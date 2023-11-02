@@ -5,6 +5,10 @@ import math
 
 
 class ISELogger:
+    TABLE_NAME = "yoctopuce"
+    DEVICE_NAME = "Yoctopuce-MilliVolt"
+    TAG_PLACE = "904"
+    TAG_SETUP = "ise"
     ISE_CALIBRATION_A = 24.71
     ISE_CALIBRATION_B = 98.96
 
@@ -24,11 +28,11 @@ class ISELogger:
             # Add data to data_points to be written
             data_points.append(
                 {
-                    "measurement": MEASUREMENT_LABEL,
+                    "measurement": cls.TABLE_NAME,
                     "tags": {
-                        "device": DEVICE_ID,
-                        "place": TAG_PLACE,
-                        "setup": TAG_SETUP
+                        "device": cls.DEVICE_NAME,
+                        "place": cls.TAG_PLACE,
+                        "setup": cls.TAG_SETUP
                     },
                     "fields": {
                         "voltage": mv_value,
