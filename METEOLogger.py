@@ -4,7 +4,7 @@ from Sensors import Sensors
 
 class METEOLogger:
     TABLE_NAME = "yoctopuce"
-    DEVICE_NAME = "Yoctopuce-Meteo"
+    DEVICE_ID = "Yocto-Meteo-V2"
     TAG_PLACE = "904"
     TAG_SETUP = "ise"
 
@@ -27,7 +27,7 @@ class METEOLogger:
                 {
                     "measurement": cls.TABLE_NAME,
                     "tags": {
-                        "device": cls.DEVICE_NAME,
+                        "device": cls.DEVICE_ID,
                         "place": cls.TAG_PLACE,
                         "setup": cls.TAG_SETUP
                     },

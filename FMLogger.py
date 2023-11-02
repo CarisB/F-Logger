@@ -6,7 +6,7 @@ from scipy.interpolate import interp1d
 
 class FMLogger:
     TABLE_NAME = "yoctopuce"
-    DEVICE_NAME = "Yoctopuce-Flowmeter"
+    DEVICE_ID = "Yocto-0-10V-Rx"
     TAG_HOSTNAME = "pcgasteam01"
     TAG_PLACE = "904"
     TAG_SETUP = "ise"
@@ -48,7 +48,7 @@ class FMLogger:
                     "measurement": cls.TABLE_NAME,
                     "tags": {
                         "hostname": cls.TAG_HOSTNAME,
-                        "device": cls.DEVICE_NAME,
+                        "device": cls.DEVICE_ID,
                         "place": cls.TAG_PLACE,
                         "setup": cls.TAG_SETUP
                     },

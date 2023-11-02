@@ -6,7 +6,7 @@ import math
 
 class ISELogger:
     TABLE_NAME = "yoctopuce"
-    DEVICE_NAME = "Yoctopuce-MilliVolt"
+    DEVICE_ID = "Yocto-milliVolt-Rx-BNC"
     TAG_PLACE = "904"
     TAG_SETUP = "ise"
     ISE_CALIBRATION_A = 24.71
@@ -30,7 +30,7 @@ class ISELogger:
                 {
                     "measurement": cls.TABLE_NAME,
                     "tags": {
-                        "device": cls.DEVICE_NAME,
+                        "device": cls.DEVICE_ID,
                         "place": cls.TAG_PLACE,
                         "setup": cls.TAG_SETUP
                     },
