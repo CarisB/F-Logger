@@ -42,7 +42,8 @@ class HVLogger:
                 cls.append_data(data_points, data)
 
             # Returns HV info
-            return f"Current: {data['value']} μA"
+            if data: return f"Current: {data['value']} μA"
+            else: return WAITING_TO_WRITE_MSG  # Happens when logger starts with no last_current_line and line is VMonH
 
         else:
             return LOGGER_DISABLED_MSG
