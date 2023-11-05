@@ -11,6 +11,7 @@ class ISELogger:
     TAG_SETUP = "ise"
     ISE_CALIBRATION_A = 24.71
     ISE_CALIBRATION_B = 98.96
+    EXCEPTION_MSG = "ISE Exception: could not return raw value."
 
     logging: bool = False
 
@@ -22,7 +23,14 @@ class ISELogger:
             if not Sensors.mv.isOnline():
                 return SENSOR_OFFLINE_MSG
 
-            mv_value = Sensors.mv.get_currentRawValue()
+            try:
+                mv_value = Sensors.mv.get_currentRawValue()
+
+                if mv_value is Sensors.mv.CURRENTRAWVALUE_INVALID:
+                    return cls.EXCEPTION_MSG
+            except:
+                return cls.EXCEPTION_MSG
+
             ppm = math.exp((mv_value - cls.ISE_CALIBRATION_B) / -cls.ISE_CALIBRATION_A)
 
             # Add data to data_points to be written
