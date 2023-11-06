@@ -7,6 +7,7 @@ class METEOLogger:
     DEVICE_ID = "Yocto-Meteo-V2"
     TAG_PLACE = "904"
     TAG_SETUP = "ise"
+    EXCEPTION_MSG = "Meteo Exception: could not return Meteo raw value."
 
     logging: bool = False
 
@@ -18,9 +19,19 @@ class METEOLogger:
             if Sensors.humidity is None or Sensors.temperature is None or Sensors.pressure is None:
                 return SENSOR_OFFLINE_MSG
 
-            humidity_value = Sensors.humidity.get_currentRawValue()
-            temperature_value = Sensors.temperature.get_currentRawValue()
-            pressure_value = Sensors.pressure.get_currentRawValue()
+            try:
+                humidity_value = Sensors.humidity.get_currentRawValue()
+                temperature_value = Sensors.temperature.get_currentRawValue()
+                pressure_value = Sensors.pressure.get_currentRawValue()
+
+                if (
+                        humidity_value is Sensors.humidity.CURRENTRAWVALUE_INVALID or
+                        temperature_value is Sensors.temperature.CURRENTRAWVALUE_INVALID or
+                        pressure_value is Sensors.pressure.CURRENTRAWVALUE_INVALID
+                ):
+                    return cls.EXCEPTION_MSG
+            except:
+                return cls.EXCEPTION_MSG
 
             # Add data to data_points to be written
             data_points.append(

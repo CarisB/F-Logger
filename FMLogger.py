@@ -10,6 +10,7 @@ class FMLogger:
     TAG_HOSTNAME = "pcgasteam01"
     TAG_PLACE = "904"
     TAG_SETUP = "ise"
+    EXCEPTION_MSG = "FM Exception: could not return current value."
 
     logging: bool = False
 
@@ -21,7 +22,13 @@ class FMLogger:
             if not Sensors.fm.isOnline():
                 return SENSOR_OFFLINE_MSG
 
-            fm_value = Sensors.fm.get_currentValue()
+            try:
+                fm_value = Sensors.fm.get_currentValue()
+
+                if fm_value is Sensors.fm.CURRENTRAWVALUE_INVALID:
+                    return cls.EXCEPTION_MSG
+            except:
+                return cls.EXCEPTION_MSG
 
             # Correcting the data reading
             calibration_curve = interp1d([0.5, 0.90, 1.30, 1.70, 2.10, 2.50],
