@@ -42,6 +42,9 @@ class FMLogger:
                 if fm_value > 2.5:
                     adjusted_flow = 0.10 * 60
 
+            if adjusted_flow < 0:
+                adjusted_flow = 0.0
+
             values = {
                 'flowvolts': fm_value,
                 'flow': adjusted_flow
