@@ -34,13 +34,13 @@ class FMLogger:
             calibration_curve = interp1d([0.5, 0.90, 1.30, 1.70, 2.10, 2.50],
                                          [0, 0.02 * 60, 0.04 * 60, 0.06 * 60, 0.08 * 60, 0.10 * 60], kind="cubic")
 
-            adjusted_flow = 0
+            adjusted_flow = 0.0
 
             try:
                 adjusted_flow = float(calibration_curve(fm_value))
             except:
                 if fm_value < 0.5:
-                    adjusted_flow = 0
+                    adjusted_flow = 0.0
                 elif fm_value > 2.5:
                     adjusted_flow = 0.10 * 60
 
