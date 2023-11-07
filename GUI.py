@@ -109,7 +109,7 @@ class GUI:
                                                text='A:')
         cls.ise_calibration_a_label.pack(side='left', padx=(inner_padding_x, 0), pady=(0, inner_padding_y))
         cls.ise_calibration_a_var = tk.DoubleVar()
-        cls.ise_calibration_a_var.set(24.71)
+        cls.ise_calibration_a_var.set(Config.ise_calibration_a)
         cls.ise_calibration_a_entry = tk.Entry(master=cls.ise_calibration_frame, textvariable=cls.ise_calibration_a_var,
                                                width=5, fg='#333', bg='#eee')
         cls.ise_calibration_a_entry.pack(side='left', pady=(0, inner_padding_y))
@@ -118,7 +118,7 @@ class GUI:
                                                text='B:')
         cls.ise_calibration_b_label.pack(side='left', pady=(0, inner_padding_y))
         cls.ise_calibration_b_var = tk.DoubleVar()
-        cls.ise_calibration_b_var.set(98.96)
+        cls.ise_calibration_b_var.set(Config.ise_calibration_b)
         cls.ise_calibration_b_entry = tk.Entry(master=cls.ise_calibration_frame, textvariable=cls.ise_calibration_b_var,
                                                width=5, fg='#333', bg='#eee')
         cls.ise_calibration_b_entry.pack(side='left', pady=(0, inner_padding_y))
@@ -128,6 +128,7 @@ class GUI:
                                                    text='Set')
         cls.ise_calibration_set_button.pack(side='left', pady=(0, inner_padding_y))
         cls.ise_calibration_reset_button = tk.Button(master=cls.ise_calibration_frame,
+                                                     command=cls.reset_calibration,
                                                      text='Reset')
         cls.ise_calibration_reset_button.pack(side='left', padx=(0, inner_padding_x), pady=(0, inner_padding_y))
 
@@ -320,14 +321,21 @@ class GUI:
     @classmethod
     def set_calibration(cls):
         try:
-            ISELogger.ISE_CALIBRATION_A = cls.ise_calibration_a_var.get()
-            ISELogger.ISE_CALIBRATION_B = cls.ise_calibration_b_var.get()
+            Config.set_ise_calibration(cls.ise_calibration_a_var.get(), cls.ise_calibration_b_var.get())
+            Config.write_new_default_calibration()
+            tk.messagebox.showinfo(title='Success',
+                                   message=f'Calibration saved:\n'
+                                           f'A={Config.ise_calibration_a}, B={Config.ise_calibration_b}')
         except tk.TclError:
             tk.messagebox.showinfo(title='ERROR', message='Please input a valid number.')
 
     @classmethod
     def reset_calibration(cls):
-        cls.ise_calibration_a_var.set()
+        cls.ise_calibration_a_var.set(Config.ise_calibration_a)
+        cls.ise_calibration_b_var.set(Config.ise_calibration_b)
+        tk.messagebox.showinfo(title='Success',
+                               message=f'Calibration reset to:\n'
+                                       f'A={Config.ise_calibration_a}, B={Config.ise_calibration_b}')
 
     @classmethod
     def browse_files(cls):

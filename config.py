@@ -1,5 +1,6 @@
 class Config:
     HV_LOG_DEFAULT_PATH = "C:\\Users\\rpcgif\\cernbox\\Documents\\CAENGECO2020.log"
+    DEFAULT_CALIBRATION_PATH = "default_calibration.txt"
     GRAFANA_URL = "https://epdt-rd-monitoring.web.cern.ch/d/i_Rdg6C4z/904?orgId=1&from=now-7d&to=now&refresh=5m"
 
     POLLING_MS = 2000
@@ -27,3 +28,16 @@ class Config:
     WRITE_FAIL_COLOR = '#b00'
 
     GRAFANA_BUTTON_TEXT = "Open Grafana Dashboard"
+
+    ise_calibration_a: float
+    ise_calibration_b: float
+
+    @classmethod
+    def set_ise_calibration(cls, a: float, b: float):
+        cls.ise_calibration_a = a
+        cls.ise_calibration_b = b
+
+    @classmethod
+    def write_new_default_calibration(cls):
+        with open(Config.DEFAULT_CALIBRATION_PATH, 'w') as file:
+            file.write(f"{cls.ise_calibration_a} {cls.ise_calibration_b}")

@@ -9,8 +9,6 @@ class ISELogger:
     DEVICE_ID = "Yocto-milliVolt-Rx-BNC"
     TAG_PLACE = "904"
     TAG_SETUP = "ise"
-    ISE_CALIBRATION_A = 24.71
-    ISE_CALIBRATION_B = 98.96
     EXCEPTION_MSG = "ISE Exception: could not return raw value."
 
     logging: bool = False
@@ -31,7 +29,7 @@ class ISELogger:
             except:
                 return cls.EXCEPTION_MSG
 
-            ppm = math.exp((mv_value - cls.ISE_CALIBRATION_B) / -cls.ISE_CALIBRATION_A)
+            ppm = math.exp((mv_value - Config.ise_calibration_b) / -Config.ise_calibration_a)
 
             # Add data to data_points to be written
             data_points.append(
@@ -45,8 +43,8 @@ class ISELogger:
                     "fields": {
                         "voltage": mv_value,
                         "ppm": ppm,
-                        "calibration_a": cls.ISE_CALIBRATION_A,
-                        "calibration_b": cls.ISE_CALIBRATION_B
+                        "calibration_a": Config.ise_calibration_a,
+                        "calibration_b": Config.ise_calibration_b
                     }
                 })
 
