@@ -1,4 +1,4 @@
-from config_data import *
+from config import *
 from Sensors import Sensors
 
 import math
@@ -21,7 +21,7 @@ class ISELogger:
 
         if cls.logging:
             if not Sensors.mv.isOnline():
-                return SENSOR_OFFLINE_MSG
+                return Config.SENSOR_OFFLINE_MSG
 
             try:
                 mv_value = Sensors.mv.get_currentRawValue()
@@ -54,4 +54,4 @@ class ISELogger:
             return f"Voltage: {mv_value} mV, PPM: {round(ppm, 2)} ppm"
 
         else:  # ISELogger.logging = False
-            return LOGGER_DISABLED_MSG
+            return Config.LOGGER_DISABLED_MSG

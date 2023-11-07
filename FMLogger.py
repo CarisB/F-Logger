@@ -1,4 +1,4 @@
-from config_data import *
+from config import *
 from Sensors import Sensors
 
 from scipy.interpolate import interp1d
@@ -20,7 +20,7 @@ class FMLogger:
 
         if cls.logging:
             if not Sensors.fm.isOnline():
-                return SENSOR_OFFLINE_MSG
+                return Config.SENSOR_OFFLINE_MSG
 
             try:
                 fm_value = Sensors.fm.get_currentValue()
@@ -67,4 +67,4 @@ class FMLogger:
             return f"Voltage: {fm_value} mV, Flow: {round(adjusted_flow, 3)} L/min"
 
         else:  # FMLogger.logging = False
-            return LOGGER_DISABLED_MSG
+            return Config.LOGGER_DISABLED_MSG

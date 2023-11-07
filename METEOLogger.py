@@ -1,4 +1,4 @@
-from config_data import *
+from config import *
 from Sensors import Sensors
 
 
@@ -17,7 +17,7 @@ class METEOLogger:
 
         if cls.logging:
             if Sensors.humidity is None or Sensors.temperature is None or Sensors.pressure is None:
-                return SENSOR_OFFLINE_MSG
+                return Config.SENSOR_OFFLINE_MSG
 
             try:
                 humidity_value = Sensors.humidity.get_currentRawValue()
@@ -53,4 +53,4 @@ class METEOLogger:
             return f"Temperature: {temperature_value} / Humidity: {humidity_value} / Pressure: {pressure_value}"
 
         else:  # METEOLogger.logging = False
-            return LOGGER_DISABLED_MSG
+            return Config.LOGGER_DISABLED_MSG

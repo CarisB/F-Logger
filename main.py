@@ -10,8 +10,7 @@ main() is first run by root.after(0, main), and then run recursively by itself w
 """
 
 from config_db import *
-from config_data import *
-from config_gui import *
+from config import *
 from Sensors import Sensors
 from ISELogger import ISELogger
 from METEOLogger import METEOLogger
@@ -55,14 +54,14 @@ def main():
     timestamp_str = timestamp.strftime("[%H:%M:%S]: ")
 
     if data_points and client.write_points(data_points):  # Successful write
-        GUI.db_write_status_text.set(timestamp_str + WRITE_SUCCESS_TEXT)
-        GUI.db_write_status_label['fg'] = WRITE_SUCCESS_COLOR
+        GUI.db_write_status_text.set(timestamp_str + Config.WRITE_SUCCESS_TEXT)
+        GUI.db_write_status_label['fg'] = Config.WRITE_SUCCESS_COLOR
     else:  # Couldn't write to database
-        GUI.db_write_status_text.set(timestamp_str + WRITE_FAIL_TEXT)
-        GUI.db_write_status_label['fg'] = WRITE_FAIL_COLOR
+        GUI.db_write_status_text.set(timestamp_str + Config.WRITE_FAIL_TEXT)
+        GUI.db_write_status_label['fg'] = Config.WRITE_FAIL_COLOR
 
     # Waits for POLLING_MS milliseconds, then callback to repeat loop
-    GUI.root.after(POLLING_MS, main)
+    GUI.root.after(Config.POLLING_MS, main)
 
 
 # Run

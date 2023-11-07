@@ -1,5 +1,4 @@
-from config_data import *
-from config_gui import *
+from config import *
 from ISELogger import ISELogger
 from METEOLogger import METEOLogger
 from FMLogger import FMLogger
@@ -31,6 +30,16 @@ class GUI:
     ise_toggle_button: ttk.Button
     ise_status_text: tk.StringVar
     ise_status_label: tk.Label
+    ise_calibration_frame: ttk.Frame
+    ise_calibration_label: tk.Label
+    ise_calibration_a_var: tk.DoubleVar
+    ise_calibration_a_label: tk.Label
+    ise_calibration_a_entry: tk.Entry
+    ise_calibration_b_label: tk.Label
+    ise_calibration_b_var: tk.DoubleVar
+    ise_calibration_b_entry: tk.Entry
+    ise_calibration_set_button: tk.Button
+    ise_calibration_reset_button: tk.Button
     meteo_toggle_label: tk.Label
     meteo_toggle_button: ttk.Button
     meteo_status_text: tk.StringVar
@@ -58,8 +67,8 @@ class GUI:
     @classmethod
     def init(cls):
         cls.root = tk.Tk()
-        cls.root.title(WINDOW_TITLE)
-        cls.root.geometry(f'{WINDOW_WIDTH}x{WINDOW_HEIGHT}')
+        cls.root.title(Config.WINDOW_TITLE)
+        cls.root.geometry(f'{Config.WINDOW_WIDTH}x{Config.WINDOW_HEIGHT}')
 
         # Resources
         current_path = os.path.dirname(os.path.abspath(__file__))  # The current directory of the script
@@ -68,7 +77,7 @@ class GUI:
 
         # Title
         cls.title_label = ttk.Label(
-            master=cls.root, text=TITLE_LABEL, font=TITLE_FONT)
+            master=cls.root, text=Config.TITLE_LABEL, font=Config.TITLE_FONT)
         cls.title_label.pack(pady=20)
 
         # Enable All / Disable All
@@ -85,6 +94,43 @@ class GUI:
                                             text='Disable All')
         cls.disable_all_button.pack(side='left', padx=20)
 
+        # ISE Calibration Frame
+        inner_padding_x = 10
+        inner_padding_y = 10
+
+        cls.ise_calibration_frame = ttk.Frame(borderwidth=2, relief='ridge')
+        cls.ise_calibration_frame.pack(anchor='w', padx=30, pady=(0, 20))
+
+        cls.ise_calibration_label = tk.Label(master=cls.ise_calibration_frame,
+                                             text='ISE (mV-to-PPM) calibration constants')
+        cls.ise_calibration_label.pack(padx=inner_padding_x, pady=(inner_padding_y, 0))
+
+        cls.ise_calibration_a_label = tk.Label(master=cls.ise_calibration_frame,
+                                               text='A:')
+        cls.ise_calibration_a_label.pack(side='left', padx=(inner_padding_x, 0), pady=(0, inner_padding_y))
+        cls.ise_calibration_a_var = tk.DoubleVar()
+        cls.ise_calibration_a_var.set(24.71)
+        cls.ise_calibration_a_entry = tk.Entry(master=cls.ise_calibration_frame, textvariable=cls.ise_calibration_a_var,
+                                               width=5, fg='#333', bg='#eee')
+        cls.ise_calibration_a_entry.pack(side='left', pady=(0, inner_padding_y))
+
+        cls.ise_calibration_b_label = tk.Label(master=cls.ise_calibration_frame,
+                                               text='B:')
+        cls.ise_calibration_b_label.pack(side='left', pady=(0, inner_padding_y))
+        cls.ise_calibration_b_var = tk.DoubleVar()
+        cls.ise_calibration_b_var.set(98.96)
+        cls.ise_calibration_b_entry = tk.Entry(master=cls.ise_calibration_frame, textvariable=cls.ise_calibration_b_var,
+                                               width=5, fg='#333', bg='#eee')
+        cls.ise_calibration_b_entry.pack(side='left', pady=(0, inner_padding_y))
+
+        cls.ise_calibration_set_button = tk.Button(master=cls.ise_calibration_frame,
+                                                   command=cls.set_calibration,
+                                                   text='Set')
+        cls.ise_calibration_set_button.pack(side='left', pady=(0, inner_padding_y))
+        cls.ise_calibration_reset_button = tk.Button(master=cls.ise_calibration_frame,
+                                                     text='Reset')
+        cls.ise_calibration_reset_button.pack(side='left', padx=(0, inner_padding_x), pady=(0, inner_padding_y))
+
         # Main Toggle Frame
         cls.toggle_frame = ttk.Frame(master=cls.root)
         cls.toggle_frame.pack(anchor='w', padx=30)
@@ -98,7 +144,7 @@ class GUI:
 
         # ISE Toggle Frame
         cls.ise_toggle_label = tk.Label(master=cls.toggle_frame, text='ISE Logger',
-                                        anchor='w', font=TOGGLE_LABEL_FONT)
+                                        anchor='w', font=Config.TOGGLE_LABEL_FONT)
         cls.ise_toggle_label.grid(column=0, row=0,
                                   sticky=tk.W, padx=5, pady=5)
 
@@ -115,7 +161,7 @@ class GUI:
 
         # METEO Toggle Frame
         cls.meteo_toggle_label = tk.Label(master=cls.toggle_frame, text='METEO Logger',
-                                          anchor='w', font=TOGGLE_LABEL_FONT)
+                                          anchor='w', font=Config.TOGGLE_LABEL_FONT)
         cls.meteo_toggle_label.grid(column=0, row=1,
                                     sticky=tk.W, padx=5, pady=5)
 
@@ -132,7 +178,7 @@ class GUI:
 
         # FM Toggle Frame
         cls.fm_toggle_label = tk.Label(master=cls.toggle_frame, text='FM Logger',
-                                       anchor='w', font=TOGGLE_LABEL_FONT)
+                                       anchor='w', font=Config.TOGGLE_LABEL_FONT)
         cls.fm_toggle_label.grid(column=0, row=2,
                                  sticky=tk.W, padx=5, pady=5)
 
@@ -149,7 +195,7 @@ class GUI:
 
         # HV Toggle Frame
         cls.hv_toggle_label = tk.Label(master=cls.toggle_frame, text='HV Logger',
-                                       anchor='w', font=TOGGLE_LABEL_FONT)
+                                       anchor='w', font=Config.TOGGLE_LABEL_FONT)
         cls.hv_toggle_label.grid(column=0, row=3,
                                  sticky=tk.W, padx=5, pady=5)
 
@@ -197,7 +243,7 @@ class GUI:
         # Link to Grafana
         cls.grafana_button = ttk.Button(master=cls.root,
                                         command=cls.open_grafana,
-                                        text=GRAFANA_BUTTON_TEXT)
+                                        text=Config.GRAFANA_BUTTON_TEXT)
         cls.grafana_button.pack(pady=10)
 
     @classmethod
@@ -231,45 +277,57 @@ class GUI:
     def set_ise_logger(cls, on: bool):
         if on:
             cls.ise_toggle_button['image'] = cls.on_img
-            cls.ise_status_text.set(WAITING_TO_WRITE_MSG)
+            cls.ise_status_text.set(Config.WAITING_TO_WRITE_MSG)
             ISELogger.logging = True
         else:
             cls.ise_toggle_button['image'] = cls.off_img
-            cls.ise_status_text.set(LOGGER_DISABLED_MSG)
+            cls.ise_status_text.set(Config.LOGGER_DISABLED_MSG)
             ISELogger.logging = False
 
     @classmethod
     def set_meteo_logger(cls, on: bool):
         if on:
             cls.meteo_toggle_button['image'] = cls.on_img
-            cls.meteo_status_text.set(WAITING_TO_WRITE_MSG)
+            cls.meteo_status_text.set(Config.WAITING_TO_WRITE_MSG)
             METEOLogger.logging = True
         else:
             cls.meteo_toggle_button['image'] = cls.off_img
-            cls.meteo_status_text.set(LOGGER_DISABLED_MSG)
+            cls.meteo_status_text.set(Config.LOGGER_DISABLED_MSG)
             METEOLogger.logging = False
 
     @classmethod
     def set_fm_logger(cls, on: bool):
         if on:
             cls.fm_toggle_button['image'] = cls.on_img
-            cls.fm_status_text.set(WAITING_TO_WRITE_MSG)
+            cls.fm_status_text.set(Config.WAITING_TO_WRITE_MSG)
             FMLogger.logging = True
         else:
             cls.fm_toggle_button['image'] = cls.off_img
-            cls.fm_status_text.set(LOGGER_DISABLED_MSG)
+            cls.fm_status_text.set(Config.LOGGER_DISABLED_MSG)
             FMLogger.logging = False
 
     @classmethod
     def set_hv_logger(cls, on: bool):
         if on:
             cls.hv_toggle_button['image'] = cls.on_img
-            cls.hv_status_text.set(WAITING_TO_WRITE_MSG)
+            cls.hv_status_text.set(Config.WAITING_TO_WRITE_MSG)
             HVLogger.logging = True
         else:
             cls.hv_toggle_button['image'] = cls.off_img
-            cls.hv_status_text.set(LOGGER_DISABLED_MSG)
+            cls.hv_status_text.set(Config.LOGGER_DISABLED_MSG)
             HVLogger.logging = False
+
+    @classmethod
+    def set_calibration(cls):
+        try:
+            ISELogger.ISE_CALIBRATION_A = cls.ise_calibration_a_var.get()
+            ISELogger.ISE_CALIBRATION_B = cls.ise_calibration_b_var.get()
+        except tk.TclError:
+            tk.messagebox.showinfo(title='ERROR', message='Please input a valid number.')
+
+    @classmethod
+    def reset_calibration(cls):
+        cls.ise_calibration_a_var.set()
 
     @classmethod
     def browse_files(cls):
@@ -288,4 +346,4 @@ class GUI:
 
     @staticmethod
     def open_grafana():
-        webbrowser.open_new(GRAFANA_URL)
+        webbrowser.open_new(Config.GRAFANA_URL)

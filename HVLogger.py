@@ -1,4 +1,4 @@
-from config_data import *
+from config import *
 import os
 import re
 from datetime import datetime
@@ -12,7 +12,7 @@ class HVLogger:
     VOLTAGE_PARAMETER = "VMonH"
 
     logging: bool = False
-    hv_log_path = HV_LOG_DEFAULT_PATH  # Set the HV logfile path to the default
+    hv_log_path = Config.HV_LOG_DEFAULT_PATH  # Set the HV logfile path to the default
     line: str = ""  # The logfile line being processed
     last_current_line: str = ""  # The last known current(I) reading from the log
 
@@ -43,10 +43,10 @@ class HVLogger:
 
             # Returns HV info
             if data: return f"Current: {data['value']} μA"
-            else: return WAITING_TO_WRITE_MSG  # Happens when logger starts with no last_current_line and line is VMonH
+            else: return Config.WAITING_TO_WRITE_MSG  # Happens when logger starts with no last_current_line and line is VMonH
 
         else:
-            return LOGGER_DISABLED_MSG
+            return Config.LOGGER_DISABLED_MSG
 
     @classmethod
     def append_data(cls, data_points: list, data: dict):
