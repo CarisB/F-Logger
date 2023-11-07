@@ -32,6 +32,7 @@ class GUI:
     ise_status_label: tk.Label
     ise_calibration_frame: ttk.Frame
     ise_calibration_label: tk.Label
+    ise_calibration_formula_label: tk.Label
     ise_calibration_a_var: tk.DoubleVar
     ise_calibration_a_label: tk.Label
     ise_calibration_a_entry: tk.Entry
@@ -78,7 +79,7 @@ class GUI:
         # Title
         cls.title_label = ttk.Label(
             master=cls.root, text=Config.TITLE_LABEL, font=Config.TITLE_FONT)
-        cls.title_label.pack(pady=20)
+        cls.title_label.pack(pady=(20,0))
 
         # Enable All / Disable All
         cls.toggle_all_frame = ttk.Frame(master=cls.root)
@@ -105,8 +106,12 @@ class GUI:
                                              text='ISE (mV-to-PPM) calibration constants')
         cls.ise_calibration_label.pack(padx=inner_padding_x, pady=(inner_padding_y, 0))
 
+        cls.ise_calibration_formula_label = tk.Label(master=cls.ise_calibration_frame,
+                                                     text='PPM = e ^ ( (mV - B) / -A )')
+        cls.ise_calibration_formula_label.pack()
+
         cls.ise_calibration_a_label = tk.Label(master=cls.ise_calibration_frame,
-                                               text='A:')
+                                               text='A=')
         cls.ise_calibration_a_label.pack(side='left', padx=(inner_padding_x, 0), pady=(0, inner_padding_y))
         cls.ise_calibration_a_var = tk.DoubleVar()
         cls.ise_calibration_a_var.set(Config.ise_calibration_a)
@@ -115,7 +120,7 @@ class GUI:
         cls.ise_calibration_a_entry.pack(side='left', pady=(0, inner_padding_y))
 
         cls.ise_calibration_b_label = tk.Label(master=cls.ise_calibration_frame,
-                                               text='B:')
+                                               text='B=')
         cls.ise_calibration_b_label.pack(side='left', pady=(0, inner_padding_y))
         cls.ise_calibration_b_var = tk.DoubleVar()
         cls.ise_calibration_b_var.set(Config.ise_calibration_b)
@@ -213,7 +218,7 @@ class GUI:
 
         # HV Logfile
         cls.hv_logfile_frame = ttk.Frame(master=cls.root)
-        cls.hv_logfile_frame.pack(pady=30)
+        cls.hv_logfile_frame.pack(pady=20)
 
         cls.hv_logfile_label = tk.Label(master=cls.hv_logfile_frame, text='HV GECO Log File',
                                         font='Helvetica 12 italic')
