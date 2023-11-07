@@ -39,9 +39,7 @@ class FMLogger:
             try:
                 adjusted_flow = float(calibration_curve(fm_value))
             except:
-                if fm_value < 0.5:
-                    adjusted_flow = 0.0
-                elif fm_value > 2.5:
+                if fm_value > 2.5:
                     adjusted_flow = 0.10 * 60
 
             values = {
