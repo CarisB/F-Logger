@@ -25,9 +25,9 @@ class METEOLogger:
                 pressure_value = Sensors.pressure.get_currentRawValue()
 
                 if (
-                        humidity_value is Sensors.humidity.CURRENTRAWVALUE_INVALID or
-                        temperature_value is Sensors.temperature.CURRENTRAWVALUE_INVALID or
-                        pressure_value is Sensors.pressure.CURRENTRAWVALUE_INVALID
+                        humidity_value == Sensors.humidity.CURRENTRAWVALUE_INVALID or
+                        temperature_value == Sensors.temperature.CURRENTRAWVALUE_INVALID or
+                        pressure_value == Sensors.pressure.CURRENTRAWVALUE_INVALID
                 ):
                     return cls.EXCEPTION_MSG
             except:

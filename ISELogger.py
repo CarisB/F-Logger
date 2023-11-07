@@ -26,7 +26,7 @@ class ISELogger:
             try:
                 mv_value = Sensors.mv.get_currentRawValue()
 
-                if mv_value is Sensors.mv.CURRENTRAWVALUE_INVALID:
+                if mv_value == Sensors.mv.CURRENTRAWVALUE_INVALID:
                     return cls.EXCEPTION_MSG
             except:
                 return cls.EXCEPTION_MSG

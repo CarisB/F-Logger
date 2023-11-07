@@ -25,7 +25,7 @@ class FMLogger:
             try:
                 fm_value = Sensors.fm.get_currentValue()
 
-                if fm_value is Sensors.fm.CURRENTRAWVALUE_INVALID:
+                if fm_value == Sensors.fm.CURRENTRAWVALUE_INVALID:
                     return cls.EXCEPTION_MSG
             except:
                 return cls.EXCEPTION_MSG
