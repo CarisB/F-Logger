@@ -1,6 +1,11 @@
+import os
+
+
 class Config:
     HV_LOG_DEFAULT_PATH = "C:\\Users\\rpcgif\\cernbox\\Documents\\CAENGECO2020.log"
-    DEFAULT_CALIBRATION_PATH = "C:\\python_programs\\F-Logger-main\\default_calibration.txt"
+    DEFAULT_CALIBRATION_FILE = "default_calibration.txt"
+    SCRIPT_PATH = os.path.dirname(__file__)
+    DEFAULT_CALIBRATION_FILE_PATH = os.path.join(SCRIPT_PATH, DEFAULT_CALIBRATION_FILE)
     GRAFANA_URL = "https://epdt-rd-monitoring.web.cern.ch/d/i_Rdg6C4z/904?orgId=1&from=now-7d&to=now&refresh=5m"
 
     POLLING_MS = 2000
@@ -39,5 +44,5 @@ class Config:
 
     @classmethod
     def write_new_default_calibration(cls):
-        with open(Config.DEFAULT_CALIBRATION_PATH, 'w') as file:
+        with open(Config.DEFAULT_CALIBRATION_FILE_PATH, 'w') as file:
             file.write(f"{cls.ise_calibration_a} {cls.ise_calibration_b}")

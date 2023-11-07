@@ -31,13 +31,13 @@ client = InfluxDBClient(host=DB_HOST, port=DB_PORT, username=DB_USERNAME, passwo
                         database=DB_DATABASE, ssl=True, verify_ssl=False)
 
 # Read the default calibration files from an external file
-with open(Config.DEFAULT_CALIBRATION_PATH) as file:
+with open(Config.DEFAULT_CALIBRATION_FILE_PATH) as file:
     contents = file.read()
     try:
         a, b = contents.split()
         Config.set_ise_calibration(float(a), float(b))
     except:
-        print(f"ERROR: Could not parse {Config.DEFAULT_CALIBRATION_PATH}")
+        print(f"ERROR: Could not parse {Config.DEFAULT_CALIBRATION_FILE_PATH}")
 
 Sensors.init()  # Find and initialize sensors
 GUI.init()  # Initialize GUI
