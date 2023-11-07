@@ -1,6 +1,6 @@
 class Config:
     HV_LOG_DEFAULT_PATH = "C:\\Users\\rpcgif\\cernbox\\Documents\\CAENGECO2020.log"
-    DEFAULT_CALIBRATION_PATH = "default_calibration.txt"
+    DEFAULT_CALIBRATION_PATH = "C:\\python_programs\\F-Logger-main\\default_calibration.txt"
     GRAFANA_URL = "https://epdt-rd-monitoring.web.cern.ch/d/i_Rdg6C4z/904?orgId=1&from=now-7d&to=now&refresh=5m"
 
     POLLING_MS = 2000
