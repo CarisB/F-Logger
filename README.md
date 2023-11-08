@@ -33,4 +33,11 @@ DB_PASSWORD = "db_password"
 DB_DATABASE = "db_database"
 ```
 
+A file named `default_calibration.txt` must be placed in the project's root directory.
+It's a simple text file containing two floats, the values for 'A' and 'B' in the ISE's 'mv-to-PPM' conversion formula.
+`PPM = e ^ ((mV - B) / -A)`  
+These values are separated by a single space and should take the format: `24.71 98.96`  
+(This file will be updated automatically when these values are set from within the program,
+so nothing further is required.)
+
 The program can be started simply by running `main.py` through the Python command-line.
