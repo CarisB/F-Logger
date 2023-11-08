@@ -4,8 +4,9 @@
 ![Screenshot of F- Logger](docs/screenshot.png)
 
 ## Purpose
-This tool was specifically developed for the F- Production Experiment at CERN, which involves irradiating detectors gases in a straw detector
-and measuring the production rate of F- in the gas output. (This is done with hopes of learning more about correlated F radicals.)
+This tool was specifically developed for the F- Production Experiment at CERN, which involves irradiating fluorinated gases in a straw detector
+and measuring the production rate of F- in the gas output.  
+(This is done with hopes of learning more about correlated F radicals.)  
 The experiment requires the logging of several sensors, including:
 - ... an ISE (Ion Selective Electrode) connected to a Yoctopuce milliVolt reader to detect the concentration of F- ions in the test solution
 - ... a Yoctopuce METEO sensor to detect environmental parameters (humidity, temperature, atmospheric pressure)
